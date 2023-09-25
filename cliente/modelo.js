@@ -25,6 +25,8 @@ function Sistema(){
 
     this.eliminarUsuario = (nick)=>{ if(this.usuarioActivo(nick)){delete this.usuarios[nick]}}
 
+    this.numeroUsuarios = ()=>{return Object.keys(this.usuarios).length}
+
 }
 
    

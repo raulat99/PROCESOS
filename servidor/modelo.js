@@ -1,14 +1,17 @@
 function Sistema(){
     this.usuarios={};
     this.agregarUsuario=function(nick){
-    if(!this.usuarios[nick]){
+        let res={"nick":-1};
+        if (!this.usuarios[nick]){
         this.usuarios[nick]=new Usuario(nick);
-        console.log("Se ha insertado el nuevo usuario con nick: " + nick)
-    }
-    else{
-        console.log("El usuario ya está en uso")
-    }
-    }
+        res.nick=nick;
+        }
+        else{
+        console.log("el nick "+nick+" está en uso");
+        }
+        return res;
+        }
+        
     this.obtenerUsuarios=()=>{return this.usuarios}
     
     this.obtenerTodosNick=()=>{ 
@@ -21,12 +24,18 @@ function Sistema(){
 
     this.obtenerUsuarioConNick = (nick)=>{return this.usuarios[nick]}
 
-    this.usuarioActivo =(nick)=>{return (nick in this.usuarios)}
+    this.usuarioActivo =(nick)=>{return {res: (nick in this.usuarios)}}
 
-    this.eliminarUsuario = (nick)=>{ if(this.usuarioActivo(nick)){delete this.usuarios[nick]}}
+    this.eliminarUsuario = (nick)=>{ 
+        if(this.usuarioActivo(nick).res){
+            delete this.usuarios[nick];
+            return {res: nick}
+        }else {
+            return {res: "-1"}
+        }
+    }
 
-    this.numeroUsuarios = ()=>{return Object.keys(this.usuarios).length}
-
+    this.numeroUsuarios = ()=>{return {res: Object.keys(this.usuarios).length}}
 }
 
    

@@ -4,6 +4,7 @@
   "description": "Proyecto de asignatura Procesos de Ingeniería de software",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "testW": "node_modules\\.bin\\jasmine-node servidor",
     "test": "./node_modules/.bin/jasmine-node servidor"
   },

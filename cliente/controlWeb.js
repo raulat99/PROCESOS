@@ -17,16 +17,16 @@ function ControlWeb(){
                 $('#mAU').remove()
                 rest.agregarUsuario(nick)
             }
-             
-
-
         });
-
     }
     this.mostrarMsg=(msg)=>{
         $('#mMsg').remove()
         let cadena ='<h2 id="mMsg">'+msg+'</h2>';
         $('#msg').append(cadena);
+    }
+
+    this.obtenerUsuarios = ()=>{
+        
     }
 
 }

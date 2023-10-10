@@ -41,6 +41,8 @@ function Sistema(){
    
 function Usuario(nick){
     this.nick=nick;
+    this.email;
+    this.password;
 }
 
 module.exports.Sistema=Sistema;

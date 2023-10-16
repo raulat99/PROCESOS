@@ -38,11 +38,11 @@ function Sistema(){
     this.numeroUsuarios = ()=>{return {res: Object.keys(this.usuarios).length}}
 }
 
-   
 function Usuario(nick){
     this.nick=nick;
     this.email;
     this.password;
 }
+
 
 module.exports.Sistema=Sistema;

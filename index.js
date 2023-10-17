@@ -4,14 +4,10 @@ const app = express();
 const passport=require("passport");
 const cookieSession = require("cookie-session");
 
-
 const modelo = require("./servidor/modelo.js");
 
 require("./servidor/passport-setup.js");
-
 const PORT = process.env.PORT || 3000;
-
-
 
 app.use(express.static(__dirname + "/"));
 

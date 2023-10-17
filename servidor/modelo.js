@@ -1,5 +1,9 @@
+//cad = capa de acceso a datos
+
+const datos = require("./cad.js");
 function Sistema(){
     this.usuarios={};
+    this.cad = new datos.CAD();
     this.agregarUsuario=function(nick){
         let res={"nick":-1};
         if (!this.usuarios[nick]){
@@ -36,6 +40,16 @@ function Sistema(){
     }
 
     this.numeroUsuarios = ()=>{return {res: Object.keys(this.usuarios).length}}
+
+    this.obtenerOCrearUsuario = (email)=>{
+        this.cad.buscarOCrearUsuario(email,(res)=>{
+            console.log("El usuario " + res.email + " está registrado en el sistema");
+        })
+    }
+
+    this.cad.conectar(() =>{
+        console.log("Conectado a Mongo Atlas");
+    });
 }
 
 function Usuario(nick){

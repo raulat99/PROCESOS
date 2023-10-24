@@ -48,9 +48,10 @@ function Sistema(test){
         })
     }
 
-    this.buscarOCrearUsuario=function(email,callback){
-        this.cad.buscarOCrearUsuario(email,function(obj){
-        callback(obj);
+    this.usuarioGoogle=function(usr,callback){
+        this.cad.buscarOCrearUsuario(usr,function(res){
+            console.log("El usuario " + res.email + " está registrado en el sistema");
+        callback(res);
         });
         }
         

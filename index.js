@@ -52,25 +52,27 @@ app.get("/fallo",function(request,response){
   response.redirect('/');
  });*/
 
+ let sistema = new modelo.Sistema(test);
+
+
  app.get("/good", function(request,response){
   let email=request.user.emails[0].value;
-  sistema.buscarOCrearUsuario(email,function(obj){
-  response.cookie('nick',obj.email);
+  sistema.usuarioGoogle({"email": email},function(usr){
+  response.cookie('nick',usr.email);
   response.redirect('/');
   });
   });
   
-let sistema = new modelo.Sistema(test);
 
 app.post("/enviarJwt", function (request, response) {
   let jwt = request.body.jwt;
   let user = JSON.parse(atob(jwt.split(".")[1]));
   let email = user.email;
-  sistema.buscarOCrearUsuario(email, function (obj) {
-    response.send({ nick: obj.email });
+  sistema.usuarioGoogle({"email": email}, function (obj) {
+    response.send({ 'nick': obj.email });
   });
 });
-
+  
 app.get("/", function (request, response) {
   var contenido = fs.readFileSync(__dirname + "/cliente/index.html");
   response.setHeader("Content-type", "text/html");

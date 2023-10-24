@@ -3,16 +3,20 @@ const express = require("express");
 const app = express();
 const passport=require("passport");
 const cookieSession = require("cookie-session");
-
+const args = process.argv.slice(2); 
 const modelo = require("./servidor/modelo.js");
-
 require("./servidor/passport-setup.js");
 const PORT = process.env.PORT || 3000;
+
+let test=false; 
+test=eval(args[0]); //test=true
+
+
 
 app.use(express.static(__dirname + "/"));
 
 app.use(cookieSession({
-  name: 'Batalla Naval',
+  name: 'Sistema',
   keys: ['key1', 'key2']
  }));
 
@@ -31,7 +35,8 @@ app.get("/fallo",function(request,response){
   response.send({nick:"nook"})
 });
 
-app.get("/good", function(request,response){
+// /good antiguo
+/*app.get("/good", function(request,response){
   let nick=request.user.emails[0].value;
   if (nick){
   sistema.agregarUsuario(nick);
@@ -39,10 +44,17 @@ app.get("/good", function(request,response){
   //console.log(request.user.emails[0].value);
   response.cookie('nick',nick);
   response.redirect('/');
- });
+ });*/
 
- 
-let sistema = new modelo.Sistema();
+ app.get("/good", function(request,response){
+  let email=request.user.emails[0].value;
+  sistema.buscarOCrearUsuario(email,function(obj){
+  response.cookie('nick',obj.email);
+  response.redirect('/');
+  });
+  });
+  
+let sistema = new modelo.Sistema(test);
 
 
 app.get("/", function (request, response) {

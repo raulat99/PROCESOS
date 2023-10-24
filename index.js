@@ -5,6 +5,12 @@ const passport=require("passport");
 const cookieSession = require("cookie-session");
 const args = process.argv.slice(2); 
 const modelo = require("./servidor/modelo.js");
+const bodyParser=require("body-parser");
+
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+
 require("./servidor/passport-setup.js");
 const PORT = process.env.PORT || 3000;
 
@@ -56,6 +62,14 @@ app.get("/fallo",function(request,response){
   
 let sistema = new modelo.Sistema(test);
 
+app.post("/enviarJwt", function (request, response) {
+  let jwt = request.body.jwt;
+  let user = JSON.parse(atob(jwt.split(".")[1]));
+  let email = user.email;
+  sistema.buscarOCrearUsuario(email, function (obj) {
+    response.send({ nick: obj.email });
+  });
+});
 
 app.get("/", function (request, response) {
   var contenido = fs.readFileSync(__dirname + "/cliente/index.html");

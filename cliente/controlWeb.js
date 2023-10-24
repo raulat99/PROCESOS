@@ -32,13 +32,34 @@ function ControlWeb(){
     }
 
     this.comprobarSesion = function () {
+      //let nick=localStorage.getItem("nick");
       let nick = $.cookie("nick");
       if (nick) {
-        cw.mostrarMsg("Bienvenido al sistema, " + nick);
+        cw.mostrarMensaje("Bienvenido al sistema, " + nick);
       } else {
         cw.mostrarAgregarUsuario();
+        cw.init();
       }
     };
+
+    this.init = function () {
+      let cw = this;
+      google.accounts.id.initialize({
+        client_id: "277970597970-l68mbl6i3peleg3qus1i7p5o0h4b5b53.apps.googleusercontent.com", //prod
+        auto_select: false,
+        callback: cw.handleCredentialsResponse,
+      });
+      google.accounts.id.prompt();
+    };
+
+    this.handleCredentialsResponse = function (response) {
+      let jwt = response.credential;
+      let user = JSON.parse(atob(jwt.split(".")[1]));
+      console.log(user.name);
+      console.log(user.email);
+      console.log(user.picture);
+      rest.enviarJwt(jwt);
+    }; 
 
     this.salir=function(){
         $.removeCookie("nick");

@@ -79,7 +79,9 @@ function ClienteRest() {
           if (data.nick != -1) {
             console.log("Usuario " + data.nick + " ha sido registrado");
             msg = "Bienvenido al sistema, " + data.nick;
-            $.cookie("nick", data.nick);
+            //$.cookie("nick", data.nick);
+
+            cw.mostratLogin() //Hay que comentar la cookie y dejar esta función
           } else {
             console.log("El nick ya está ocupado");
           }
@@ -93,6 +95,55 @@ function ClienteRest() {
         },
         contentType: "application/json",
         //dataType:'json'
+      });
+    };
+    this.registrarUsuario = function (email, password) {
+      $.ajax({
+        type: "POST",
+        url: "/registrarUsuario",
+        data: JSON.stringify({ email: email, password: password }),
+        success: function (data) {
+          if (data.nick != -1) {
+            console.log("Usuario " + data.nick + " ha sido registrado");
+            //$.cookie("nick", data.nick);
+            cw.limpiar();
+            
+            //cw.mostrarMensaje("Bienvenido al sistema, " + data.nick);
+            //cw.mostrarLogin();
+          } else {
+            console.log("El nick está ocupado");
+          }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          console.log("Status: " + textStatus);
+          console.log("Error: " + errorThrown);
+        },
+        contentType: "application/json",
+      });
+    };
+      
+    this.loginUsuario = function (email, password) {
+      $.ajax({
+        type: "POST",
+        url: "/loginUsuario",
+        data: JSON.stringify({ email: email, password: password }),
+        success: function (data) {
+          if (data.nick != -1) {
+            console.log("Usuario " + data.nick + " ha sido logueado");
+            $.cookie("nick", data.nick);
+            cw.limpiar();
+            cw.mostrarMensaje("Bienvenido al sistema, " + data.nick);
+            //cw.mostrarLogin();
+          } else {
+            console.log("No se puede iniciar sesión");
+            cw.mostrarMensaje("No se puede iniciar sesión");
+          }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          console.log("Status: " + textStatus);
+          console.log("Error: " + errorThrown);
+        },
+        contentType: "application/json",
       });
     };
 

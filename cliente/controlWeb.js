@@ -43,23 +43,6 @@ function ControlWeb(){
       }
     };
 
-    this.mostrarRegistro=()=>{
-      $("#fmRegistro").remove();
-      $("#registro").load("./cliente/registro.html", ()=>{
-        $("#btnRegistro").on("click", ()=>{
-          let email=$("#email").val();
-          let pwd = $("#pwd").val();
-          if(email && pwd)
-          {
-              //FALTA POR HACER
-              //rest.registrarUsuario(email)
-              console.log("Valores para el registro: "+ email + " " + pwd);
-          }
-      });
-      });
-
-    }
-
     this.init = function () {
       let cw = this;
       google.accounts.id.initialize({
@@ -73,9 +56,9 @@ function ControlWeb(){
     this.handleCredentialsResponse = function (response) {
       let jwt = response.credential;
       let user = JSON.parse(atob(jwt.split(".")[1]));
-      //console.log(user.name);
-      //console.log(user.email);
-      //console.log(user.picture);
+      console.log(user.name);
+      console.log(user.email);
+      console.log(user.picture);
       rest.enviarJwt(jwt);
     }; 
 
@@ -88,5 +71,76 @@ function ControlWeb(){
         location.reload();
     };
 
+    this.mostrarRegistro=()=>{
+      if ($.cookie("nick")) {
+        return true;
+      }
+      $("#fmRegistro").remove();
+      $("#registro").load("./cliente/registro.html", ()=>{
+        $("#btnRegistro").on("click", ()=>{
+          let email=$("#email").val();
+          let pwd = $("#pwd").val();
+          if(email && pwd)
+          {
+              rest.registrarUsuario(email, pwd)
+              console.log("Valores para el registro: "+ email + " " + pwd);
+          }
+      });
+      });
+    }
 
+    this.mostrarLogin = ()=>{
+      if ($.cookie("nick")) {
+        return true;
+      }
+      $("#fmLogin").remove();
+      $("#registro").load("./cliente/login.html", ()=>{
+        $("#btnLogin").on("click", ()=>{
+          let email=$("#email").val();
+          let pwd = $("#pwd").val();
+          if(email && pwd)
+          {
+              rest.loginUsuario(email, pwd)
+              console.log("Valores para el login : "+ email + " " + pwd);
+          }
+      });
+      });
+    }
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    this.buscarUsuario = function (obj, callback) {
+      buscar(this.usuarios, { email: obj.email }, callback);
+    };
+  
+    this.insertarUsuario = function (usuario, callback) {
+      insertar(this.usuarios, usuario, callback);
+    };
+  
+    function buscar(coleccion, criterio, callback) {
+      let col = coleccion;
+      coleccion.find(criterio).toArray(function (error, usuarios) {
+        if (usuarios.length == 0) {
+          callback(undefined);
+        } else {
+          callback(usuarios[0]);
+        }
+      });
+    }
+  
+    function insertar(coleccion, elemento, callback) {
+      coleccion.insertOne(elemento, function (err, result) {
+        if (err) {
+          console.log("error");
+        } else {
+          console.log("Nuevo elemento creado");
+          callback(elemento);
+        }
+      });
+    }
 }

@@ -1,5 +1,6 @@
 //cad = capa de acceso a datos
 const datos = require("./cad.js");
+const correo = require("./email.js")
 
 function Sistema(test){
     this.usuarios={};
@@ -54,6 +55,36 @@ function Sistema(test){
         callback(res);
         });
         }
+        
+    this.registrarUsuario = function (obj, callback) {
+      let modelo = this;
+      if (!obj.nick) {
+        obj.nick = obj.email;
+      }
+      this.cad.buscarUsuario(obj, function (usr) {
+        if (!usr) {
+            obj.key = Date.now().toString();
+            obj.confirmada = false;
+            modelo.cad.insertarUsuario(obj, function (res) {
+            callback(res);
+
+            correo.enviarEmail(obj.email, obj.key, "Confirmar cuenta");
+          });
+        } else {
+          callback({ email: -1 });
+        }
+      });
+    };
+
+    this.loginUsuario = (obj, callback)=>{
+        this.cad.buscarUsuario({email: obj.email, confirmada:true}, (usr)=>{
+            if(usr && obj.pwd == usr.password){
+                callback(usr);
+            }else{
+                callback({email: -1})
+            }
+        })
+    };
         
 
     if(!this.test){

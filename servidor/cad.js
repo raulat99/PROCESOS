@@ -4,8 +4,19 @@ var ObjectId = require("mongodb").ObjectId;
 function CAD() {
   this.usuarios;
 
-  this.buscarOCrearUsuario = function (usr, callback) {
-    buscarOCrear(this.usuarios, usr, callback);
+  function buscar(coleccion, criterio, callback) {
+    let col = coleccion;
+    coleccion.find(criterio).toArray(function (error, usuarios) {
+      if (usuarios.length == 0) {
+        callback(undefined);
+      } else {
+        callback(usuarios[0]);
+      }
+    });
+  }
+
+  this.buscarUsuario = function (obj, callback) {
+    buscar(this.usuarios, { email: obj.email }, callback);
   };
 
   function buscarOCrear(coleccion, criterio, callback) {
@@ -24,6 +35,25 @@ function CAD() {
       }
     );
   }
+
+  this.buscarOCrearUsuario = function (usr, callback) {
+    buscarOCrear(this.usuarios, usr, callback);
+  };
+
+  function insertar(coleccion, elemento, callback) {
+    coleccion.insertOne(elemento, function (err, result) {
+      if (err) {
+        console.log("error");
+      } else {
+        console.log("Nuevo elemento creado");
+        callback(elemento);
+      }
+    });
+  }
+
+  this.insertarUsuario = function (usuario, callback) {
+    insertar(this.usuarios, usuario, callback);
+  };
 
   this.conectar = async function (callback) {
     let cad = this;

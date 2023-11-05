@@ -26,7 +26,7 @@ function ControlWeb(){
         });
     }
     this.mostrarMsg=(msg)=>{
-        $('#mMsg').remove()
+        //$('#mMsg').remove()
         let cadena ='<h2 id="mMsg">'+msg+'</h2>';
         $('#msg').append(cadena);
     }

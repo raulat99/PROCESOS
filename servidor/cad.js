@@ -4,8 +4,29 @@ var ObjectId = require("mongodb").ObjectId;
 function CAD() {
   this.usuarios;
 
+  this.actualizarUsuario=function(obj,callback){
+    actualizar(this.usuarios,obj,callback);
+    }
+  
+    function actualizar(coleccion, obj, callback) {
+    coleccion.findOneAndUpdate(
+      { _id: ObjectId(obj._id) },
+      { $set: obj },
+      { upsert: false, returnDocument: "after", projection: { email: 1 } },
+      function (err, doc) {
+        if (err) {
+          throw err;
+        } else {
+          console.log("Elemento actualizado");
+          //console.log(doc);
+          //console.log(doc);
+          callback({ email: doc.value.email });
+        }
+      }
+    );
+  }
+
   function buscar(coleccion, criterio, callback) {
-    let col = coleccion;
     coleccion.find(criterio).toArray(function (error, usuarios) {
       if (usuarios.length == 0) {
         callback(undefined);

@@ -86,7 +86,7 @@ function ClienteRest() {
             console.log("El nick ya está ocupado");
           }
           cw.limpiar();
-          cw.mostrarMensaje(msg);
+          cw.mostrarMsg(msg);
         },
         error: function (xhr, textStatus, errorThrown) {
           //console.log(JSON.parse(xhr.responseText));
@@ -101,17 +101,19 @@ function ClienteRest() {
       $.ajax({
         type: "POST",
         url: "/registrarUsuario",
-        data: JSON.stringify({ email: email, password: password }),
+        data: JSON.stringify({ "email": email, "password": password }),
         success: function (data) {
           if (data.nick != -1) {
             console.log("Usuario " + data.nick + " ha sido registrado");
             //$.cookie("nick", data.nick);
             cw.limpiar();
             
-            //cw.mostrarMensaje("Bienvenido al sistema, " + data.nick);
-            //cw.mostrarLogin();
+            cw.mostrarMsg("Bienvenido al sistema, " + data.nick);
+            cw.mostrarLogin();
           } else {
             console.log("El nick está ocupado");
+            cw.mostrarMsg("El nick " + nick + " está ocupado");
+
           }
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -132,11 +134,11 @@ function ClienteRest() {
             console.log("Usuario " + data.nick + " ha sido logueado");
             $.cookie("nick", data.nick);
             cw.limpiar();
-            cw.mostrarMensaje("Bienvenido al sistema, " + data.nick);
+            cw.mostrarMsg("Bienvenido al sistema, " + data.nick);
             //cw.mostrarLogin();
           } else {
             console.log("No se puede iniciar sesión");
-            cw.mostrarMensaje("No se puede iniciar sesión");
+            cw.mostrarMsg("No se puede iniciar sesión");
           }
         },
         error: function (xhr, textStatus, errorThrown) {

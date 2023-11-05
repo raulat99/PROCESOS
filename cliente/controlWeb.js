@@ -15,7 +15,6 @@ function ControlWeb(){
       cadena = cadena + '<h5 id="msgAURespuesta">  </h5> ';
       
       cadena = cadena + '<button id="btnAU" type="submit" class="btn btn-primary">Submit</button>';
-      cadena=cadena+'<div><a href="/auth/google"><img src="./cliente/img/btn_google_signin_light_pressed_web.png" style="height:40px;"></a></div>';
       cadena = cadena + '<style>#btnAU:hover {}</style>'
       cadena = cadena + '</div>';
       cadena = cadena + '</div></div></div>';

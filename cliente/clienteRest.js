@@ -46,7 +46,7 @@ function ClienteRest() {
       })
     }
 
-    this.eliminarUsuario = (nick)=>{
+    this.eliminarUsuario = (nick, msgid)=>{
       $.getJSON("/eliminarUsuario/" + nick, (data)=>{
         if(data.res != -1){
           let msg = "El usuario " + nick + " ha sido eliminado"
@@ -94,7 +94,11 @@ function ClienteRest() {
             console.log("Usuario " + data.nick + " ha sido registrado");
             msg = "Bienvenido al sistema, " + data.nick;
             $.cookie("nick", data.nick);
-
+            cw.mostrarAgregarUsuario();
+            cw.mostrarNumeroUsuarios();
+            cw.mostrarUsuarioActivo();
+            cw.mostrarEliminarUsuario();
+            cw.mostrarObtenerUsuarios();
             //cw.mostrarLogin() //Hay que comentar la cookie y dejar esta función
           } else {
             console.log("El nick ya está ocupado");

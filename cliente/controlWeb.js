@@ -7,8 +7,13 @@ function ControlWeb(){
       let cadena='<div id="mAU">';
       cadena = cadena + '<div class="card"><div class="card-body">';
       cadena = cadena +'<div class="form-group">';
+      cadena = cadena + '<h4 id="MsgAgregarUsuario"> Agrega un nuevo usuario </h4>';
       cadena = cadena + '<label for="nick">Nick:</label>';
       cadena = cadena + '<p><input type="text" class="form-control" id="nick" placeholder="introduce un nick"></p>';
+      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+      
+      cadena = cadena + '<h5 id="msgAURespuesta">  </h5> ';
+      
       cadena = cadena + '<button id="btnAU" type="submit" class="btn btn-primary">Submit</button>';
       cadena=cadena+'<div><a href="/auth/google"><img src="./cliente/img/btn_google_signin_light_pressed_web.png" style="height:40px;"></a></div>';
       cadena = cadena + '<style>#btnAU:hover {}</style>'
@@ -21,14 +26,111 @@ function ControlWeb(){
             let nick=$("#nick").val();
             if(nick)
             {
-                $('#mAU').remove()
-                rest.agregarUsuario(nick)
+                rest.agregarUsuario(nick, "#msgAURespuesta")
             }
         });
     }
+
+    this.mostrarObtenerUsuarios = ()=>{
+      $('#mOU').remove();
+      let cadena='<div id="mOU">';
+      cadena = cadena + '<div class="card"><div class="card-body">';
+      cadena = cadena +'<div class="form-group">';
+      cadena = cadena + '<h4 id="msgOU"> Mostrar usuarios </h4> ';
+
+      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+      cadena = cadena + '<h5 id="msgOURespuesta">  </h5> ';
+      cadena = cadena + '<button id="btnOU" type="submit" class="btn btn-primary">Submit</button>';
+      cadena = cadena + '<style>#btnOU:hover {}</style>'
+      cadena = cadena + '</div>';
+      cadena = cadena + '</div></div></div>';
+
+      $("#nu").append(cadena);
+
+      $("#btnOU").on("click", ()=>{
+            rest.obtenerUsuarios("#msgOURespuesta");
+    });
+    }
+
+    this.mostrarNumeroUsuarios = ()=>{
+      $('#mNU').remove();
+      let cadena='<div id="mNU">';
+      cadena = cadena + '<div class="card"><div class="card-body">';
+      cadena = cadena +'<div class="form-group">';
+      cadena = cadena + '<h4 id="msgNU"> Mostrar numero de usuarios </h4> ';
+
+      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+      cadena = cadena + '<h5 id="msgNURespuesta">  </h5> ';
+      cadena = cadena + '<button id="btnNU" type="submit" class="btn btn-primary">Submit</button>';
+      cadena = cadena + '<style>#btnNU:hover {}</style>'
+      cadena = cadena + '</div>';
+      cadena = cadena + '</div></div></div>';
+
+      $("#nu").append(cadena);
+
+      $("#btnNU").on("click", ()=>{
+            rest.numeroUsuarios("#msgNURespuesta");
+    });
+    }
+
+
+    this.mostrarUsuarioActivo = ()=>{
+      $('#mUA').remove();
+      let cadena='<div id="mUA">';
+      cadena = cadena + '<div class="card"><div class="card-body">';
+      cadena = cadena +'<div class="form-group">';
+      cadena = cadena + '<h4 id="MsgUA"> Mostrar usuario activo </h4>';
+      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+      cadena = cadena + '<h5 id="msgUARespuesta">  </h5> ';
+      cadena = cadena + '<p><input type="text" class="form-control" id="nickUA" placeholder="introduce un nick"></p>';
+      cadena = cadena + '<button id="btnUA" type="submit" class="btn btn-primary">Submit</button>';
+      cadena = cadena + '<style>#btnUA:hover {}</style>'
+      cadena = cadena + '</div>';
+      cadena = cadena + '</div></div></div>';
+
+        $("#ua").append(cadena);
+
+        $("#btnUA").on("click", ()=>{
+            let nick=$("#nickUA").val();
+            if(nick)
+            {
+                rest.usuarioActivo(nick,"#msgUARespuesta" )
+            }
+        });
+    }
+
+    this.mostrarEliminarUsuario = ()=>{
+      $('#mEU').remove();
+      let cadena='<div id="mEU">';
+      cadena = cadena + '<div class="card"><div class="card-body">';
+      cadena = cadena +'<div class="form-group">';
+      cadena = cadena + '<h4 id="MsgEU"> Eliminar usuario </h4>';
+      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+      cadena = cadena + '<h5 id="msgEURespuesta">  </h5> ';
+      cadena = cadena + '<p><input type="text" class="form-control" id="nickEU" placeholder="introduce un nick"></p>';
+      cadena = cadena + '<button id="btnEU" type="submit" class="btn btn-primary">Submit</button>';
+      cadena = cadena + '<style>#btnEU:hover {}</style>'
+      cadena = cadena + '</div>';
+      cadena = cadena + '</div></div></div>';
+
+        $("#ua").append(cadena);
+
+        $("#btnEU").on("click", ()=>{
+            let nick=$("#nickEU").val();
+            if(nick)
+            {
+                rest.eliminarUsuario(nick,"#msgEURespuesta" )
+            }
+        });
+    }
+
+    this.mostrarMsgId = (msg, id)=>{
+      $(id).text(msg);
+    }
+
     this.mostrarMsg=(msg)=>{
         //$('#mMsg').remove()
-        let cadena ='<h2 id="mMsg">'+msg+'</h2>';
+        let cadena ='<h3 id="mMsg">'+msg+'</h2>';
         $('#msg').append(cadena);
     }
 
@@ -37,6 +139,11 @@ function ControlWeb(){
       let nick = $.cookie("nick");
       if (nick) {
         cw.mostrarMsg("Bienvenido al sistema, " + nick);
+        cw.mostrarAgregarUsuario();
+        cw.mostrarNumeroUsuarios();
+        cw.mostrarUsuarioActivo();
+        cw.mostrarEliminarUsuario();
+        cw.mostrarObtenerUsuarios();
       } else {
         //cw.mostrarAgregarUsuario();
         cw.mostrarLogin();

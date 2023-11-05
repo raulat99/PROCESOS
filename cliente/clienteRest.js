@@ -1,38 +1,47 @@
 function ClienteRest() {
-  this.agregarUsuario = function (nick) {
+  this.agregarUsuario = function (nick, msgid) {
     var cli = this;
     $.getJSON("/agregarUsuario/" + nick, function (data) {
       let msg ="El nick " + nick + " ya está ocupado";
       if (data.nick != -1) {
         console.log("Usuario " + nick + " ha sido registrado");
         msg = "Usuario " + nick + " ha sido registrado";
+        cw.mostrarMsgId(msg, msgid)
+
         $.cookie("nick", nick);
       } else {
         console.log("El nick ya está ocupado");
+        cw.mostrarMsgId("El nick ya está ocupado", msgid)
       }
-      cw.mostrarMsg(msg);
     });
     }
-    this.obtenerUsuarios = ()=>{
+    this.obtenerUsuarios = (msgid)=>{
         var cli = this;
         $.getJSON("/obtenerUsuarios", (data)=>{
             console.log(data)
+            cw.mostrarMsgId(JSON.stringify(data), msgid)
         })
     } 
-    this.numeroUsuarios = ()=>{
+    this.numeroUsuarios = (msgid)=>{
       var cli = this;
       $.getJSON("/numeroUsuarios", (data)=>{
           console.log("El numero de usuarios es: " + data.res)
+          cw.mostrarMsgId(data.res, msgid)
       })
+      
     }
     
-    this.usuarioActivo = (nick) =>{
+    this.usuarioActivo = (nick, msgid) =>{
       var cli = this;
       $.getJSON("/usuarioActivo/" + nick, (data)=>{
         if(data.res){
-          console.log("El usuario " + nick + " está activo")
+          let msg = "El usuario " + nick + " está activo"
+          console.log(msg)
+          cw.mostrarMsgId(msg, msgid)
         }else{
-          console.log("El usuario " + nick + " no está activo")
+          let msg = "El usuario " + nick + " no está activo"
+          console.log(msg)
+          cw.mostrarMsgId(msg, msgid)
         }
       })
     }

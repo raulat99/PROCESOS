@@ -11,6 +11,7 @@ function ControlWeb(){
       cadena = cadena + '<p><input type="text" class="form-control" id="nick" placeholder="introduce un nick"></p>';
       cadena = cadena + '<button id="btnAU" type="submit" class="btn btn-primary">Submit</button>';
       cadena=cadena+'<div><a href="/auth/google"><img src="./cliente/img/btn_google_signin_light_pressed_web.png" style="height:40px;"></a></div>';
+      cadena = cadena + '<style>#btnAU:hover {}</style>'
       cadena = cadena + '</div>';
       cadena = cadena + '</div></div></div>';
 
@@ -38,7 +39,7 @@ function ControlWeb(){
         cw.mostrarMsg("Bienvenido al sistema, " + nick);
       } else {
         //cw.mostrarAgregarUsuario();
-        cw.mostrarRegistro();
+        cw.mostrarLogin();
         cw.init();
       }
     };
@@ -64,12 +65,22 @@ function ControlWeb(){
 
     this.limpiar = function(){
       $("#mAU").remove();
+      $("#fmRegistro").remove();
+      $("#fmLogin").remove();
     }
 
-    this.salir=function(){
+    /*this.salir=function(){
         $.removeCookie("nick");
         location.reload();
-    };
+    };*/
+
+    this.salir=function(){
+      //localStorage.removeItem("nick");
+      $.removeCookie("nick");
+      location.reload();
+      rest.cerrarSesion();
+      }
+      
 
     this.mostrarRegistro=()=>{
       if ($.cookie("nick")) {
@@ -104,43 +115,6 @@ function ControlWeb(){
               console.log("Valores para el login : "+ email + " " + pwd);
           }
       });
-      });
-    }
-
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    this.buscarUsuario = function (obj, callback) {
-      buscar(this.usuarios, { email: obj.email }, callback);
-    };
-  
-    this.insertarUsuario = function (usuario, callback) {
-      insertar(this.usuarios, usuario, callback);
-    };
-  
-    function buscar(coleccion, criterio, callback) {
-      let col = coleccion;
-      coleccion.find(criterio).toArray(function (error, usuarios) {
-        if (usuarios.length == 0) {
-          callback(undefined);
-        } else {
-          callback(usuarios[0]);
-        }
-      });
-    }
-  
-    function insertar(coleccion, elemento, callback) {
-      coleccion.insertOne(elemento, function (err, result) {
-        if (err) {
-          console.log("error");
-        } else {
-          console.log("Nuevo elemento creado");
-          callback(elemento);
-        }
       });
     }
 }

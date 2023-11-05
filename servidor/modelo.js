@@ -60,38 +60,53 @@ function Sistema(test){
     this.registrarUsuario = function (obj, callback) {
       let modelo = this;
       if (!obj.nick) {
-
-        console.log("PASO POR AQUI: pwd = " + obj.password )
         obj.nick = obj.email;
         bcrypt.hash(obj.password, 10, function(err, hash) {
             obj.password = hash        
-        });
-        
+        });    
       }
       this.cad.buscarUsuario(obj, function (usr) {
         if (!usr) {
             obj.key = Date.now().toString();
             obj.confirmada = false;
-            modelo.cad.insertarUsuario(obj, function (res) {
-            callback(res);});
+            
 
-          console.log("Usuario creado, no existía previamente")
-          correo.enviarEmail(obj.email, obj.key, "Confirmar cuenta");
-        } else {
-          callback({ email: -1 });
-        }
+            bcrypt.hash(obj.password, 10, function (err, hash) {
+              obj.password = hash;
+              console.log(obj.password);
+              console.log(obj.hash);
+    
+              modelo.cad.insertarUsuario(obj, function (res) {
+                callback(res);
+              });
+              console.log("Usuario creado, no existía previamente")
+              correo.enviarEmail(obj.email, obj.key, "Confirmar cuenta");
+            });
+          } else {
+            callback({ email: -1, mensaje: "Usuario no encontrado" });
+          }
       });
     };
 
     this.loginUsuario = (obj, callback) => {
       this.cad.buscarUsuario({ email: obj.email, confirmada: true }, (usr) => {
-        bcrypt.compare(plaintextPassword, hash, function (err, result) {
-          if (usr && result) {
-            callback(usr);
-          } else {
-            callback({ email: -1 });
-          }
-        });
+        if (usr && usr.password) {
+          bcrypt.compare(obj.password, usr.password, function (err, result) {
+            if (err) {
+              console.error("Error al comparar contraseñas:", err);
+              callback({ email: -1, mensaje: "Error al comparar contraseñas" });
+            } else if (result) {
+              callback(usr); // Contraseña válida
+            } else {
+              callback({ email: -1, mensaje: "Contraseña incorrecta" }); // Contraseña incorrecta
+            }
+          });
+        } else {
+          callback({
+            email: -1,
+            mensaje: "Usuario no encontrado o contraseña no establecida",
+          }); // Usuario no encontrado o contraseña no establecida
+        }
       });
     };
         

@@ -75,13 +75,14 @@ function ClienteRest() {
         url: "/enviarJwt",
         data: JSON.stringify({ jwt: jwt }),
         success: function (data) {
-          let msg = "El nick " + nick + " está ocupado";
+          console.log({data})
+          let msg = "El nick " + data.nick + " está ocupado";
           if (data.nick != -1) {
             console.log("Usuario " + data.nick + " ha sido registrado");
             msg = "Bienvenido al sistema, " + data.nick;
-            //$.cookie("nick", data.nick);
+            $.cookie("nick", data.nick);
 
-            cw.mostratLogin() //Hay que comentar la cookie y dejar esta función
+            //cw.mostrarLogin() //Hay que comentar la cookie y dejar esta función
           } else {
             console.log("El nick ya está ocupado");
           }
@@ -109,10 +110,10 @@ function ClienteRest() {
             cw.limpiar();
             
             cw.mostrarMsg("Bienvenido al sistema, " + data.nick);
-            cw.mostrarLogin();
+            //cw.mostrarLogin();
           } else {
             console.log("El nick está ocupado");
-            cw.mostrarMsg("El nick " + nick + " está ocupado");
+            cw.mostrarMsg("El nick " + data.nick + " está ocupado");
 
           }
         },
@@ -133,12 +134,13 @@ function ClienteRest() {
           if (data.nick != -1) {
             console.log("Usuario " + data.nick + " ha sido logueado");
             $.cookie("nick", data.nick);
-            cw.limpiar();
             cw.mostrarMsg("Bienvenido al sistema, " + data.nick);
+            cw.limpiar();
             //cw.mostrarLogin();
           } else {
             console.log("No se puede iniciar sesión");
             cw.mostrarMsg("No se puede iniciar sesión");
+            cw.limpiar();
           }
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -149,5 +151,11 @@ function ClienteRest() {
       });
     };
 
+    this.cerrarSesion=function(){
+      $.getJSON("/cerrarSesion",function(){
+      console.log("Sesión cerrada");
+      $.removeCookie("nick");
+      })
+    };
 }
 

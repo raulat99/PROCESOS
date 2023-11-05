@@ -39,6 +39,14 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 3000;
 
+const haIniciado = function (request, response, next) {
+  if (request.user) {
+    next();
+  } else {
+    response.redirect("/");
+  }
+};
+
 let sistema = new modelo.Sistema(test);
 
 app.listen(PORT, () => {
@@ -63,8 +71,10 @@ app.post("/enviarJwt", function (request, response) {
   });
 });
 
-app.post('/loginUsuario',passport.authenticate("local",{failureRedirect:"/fallo",successRedirect: "/ok"})
-);
+app.post('/loginUsuario',passport.authenticate("local",{failureRedirect:"/fallo",successRedirect: "/ok"}));
+
+
+
 app.get("/ok",function(request,response){
 response.send({nick:request.user.email})
 });
@@ -117,6 +127,15 @@ app.get("/confirmarUsuario/:email/:key", function (request, response) {
   });
 });
 
+app.get("/cerrarSesion", haIniciado, function (request, response) {
+  let nick = request.user.nick;
+  request.logout();
+  response.redirect("/");
+  if (nick) {
+    sistema.eliminarUsuario(nick);
+  }
+});
+
 app.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/fallo" }),
@@ -129,29 +148,38 @@ app.get("/fallo", function (request, response) {
   response.send({ nick: "nook" });
 });
 
-app.get("/agregarUsuario/:nick", function (request, response) {
+app.get("/cerrarSesion", haIniciado, function (request, response) {
+  let nick = request.user.nick;
+  request.logout();
+  response.redirect("/");
+  if (nick) {
+    sistema.eliminarUsuario(nick);
+  }
+});
+
+app.get("/agregarUsuario/:nick", haIniciado, function (request, response) {
   let nick = request.params.nick;
   let res = sistema.agregarUsuario(nick);
   response.send(res);
 });
 
-app.get("/obtenerUsuarios", function (request, response) {
+app.get("/obtenerUsuarios", haIniciado, function (request, response) {
   let res = sistema.obtenerUsuarios();
   response.send(res);
 });
 
-app.get("/usuarioActivo/:nick", function (request, response) {
+app.get("/usuarioActivo/:nick", haIniciado, function (request, response) {
   let nick = request.params.nick;
   let res = sistema.usuarioActivo(nick);
   response.send(res);
 });
 
-app.get("/numeroUsuarios", function (request, response) {
+app.get("/numeroUsuarios", haIniciado, function (request, response) {
   let res = sistema.numeroUsuarios();
   response.send(res);
 });
 
-app.get("/eliminarUsuario/:nick", function (request, response) {
+app.get("/eliminarUsuario/:nick", haIniciado, function (request, response) {
   let nick = request.params.nick;
   let res = sistema.eliminarUsuario(nick);
   response.send(res);

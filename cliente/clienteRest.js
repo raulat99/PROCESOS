@@ -49,9 +49,13 @@ function ClienteRest() {
     this.eliminarUsuario = (nick)=>{
       $.getJSON("/eliminarUsuario/" + nick, (data)=>{
         if(data.res != -1){
-          console.log("El usuario " + nick + " ha sido eliminado")
+          let msg = "El usuario " + nick + " ha sido eliminado"
+          console.log(msg)
+          cw.mostrarMsgId(msg, msgid)
         }else{
-          console.log("El usuario " + nick + " no existe")
+          let msg = "El usuario " + nick + " no existe"
+          console.log(msg)
+          cw.mostrarMsgId(msg, msgid)
         }
       })
 

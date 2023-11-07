@@ -36,8 +36,8 @@ function CAD() {
     });
   }
 
-  this.buscarUsuario = function (obj, callback) {
-    buscar(this.usuarios, { email: obj.email }, callback);
+  this.buscarUsuario = function (criterio, callback) {
+    buscar(this.usuarios, criterio, callback);
   };
 
   function buscarOCrear(coleccion, criterio, callback) {

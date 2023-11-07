@@ -65,12 +65,11 @@ function Sistema(test){
             obj.password = hash        
         });    
       }
-      this.cad.buscarUsuario(obj, function (usr) {
+      this.cad.buscarUsuario({ email: obj.email } , function (usr) {
         if (!usr) {
             obj.key = Date.now().toString();
             obj.confirmada = false;
             
-
             bcrypt.hash(obj.password, 10, function (err, hash) {
               obj.password = hash;
               console.log(obj.password);
@@ -90,6 +89,12 @@ function Sistema(test){
 
     this.loginUsuario = (obj, callback) => {
       this.cad.buscarUsuario({ email: obj.email, confirmada: true }, (usr) => {
+        
+        if (!usr){
+          callback({"email":-1});
+          return -1;
+        }
+        
         if (usr && usr.password) {
           bcrypt.compare(obj.password, usr.password, function (err, result) {
             if (err) {

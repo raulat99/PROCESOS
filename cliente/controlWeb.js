@@ -127,9 +127,12 @@ function ControlWeb(){
       $(id).text(msg);
     }
 
-    this.mostrarMsg=(msg)=>{
-        //$('#mMsg').remove()
-        let cadena ='<h3 id="mMsg">'+msg+'</h2>';
+    this.mostrarMsg=(msg, error)=>{
+      $('#mMsg').remove();
+      var cadena ='<h3 id="mMsg">'+msg+'</h2>';
+      if(error){
+        cadena ='<h3 id="mMsg" style="color=red;">'+msg+'</h2>';
+      }
         $('#msg').append(cadena);
     }
 
@@ -146,10 +149,12 @@ function ControlWeb(){
       } else {
         //cw.mostrarAgregarUsuario();
         cw.mostrarLogin();
-        cw.init();
+        //cw.init();
       }
     };
 
+
+    //DEPRECATED
     this.init = function () {
       let cw = this;
       google.accounts.id.initialize({
@@ -159,7 +164,7 @@ function ControlWeb(){
       });
       google.accounts.id.prompt();
     };
-
+    //DEPRECATED
     this.handleCredentialsResponse = function (response) {
       let jwt = response.credential;
       let user = JSON.parse(atob(jwt.split(".")[1]));
@@ -170,7 +175,6 @@ function ControlWeb(){
     }; 
 
     this.limpiar = function(){
-      $("#mAU").remove();
       $("#fmRegistro").remove();
       $("#fmLogin").remove();
     }
@@ -200,7 +204,7 @@ function ControlWeb(){
           if(email && pwd)
           {
               rest.registrarUsuario(email, pwd)
-              console.log("Valores para el registro: "+ email + " " + pwd);
+              //console.log("Valores para el registro: "+ email + " " + pwd);
           }
       });
       });
@@ -218,7 +222,7 @@ function ControlWeb(){
           if(email && pwd)
           {
               rest.loginUsuario(email, pwd)
-              console.log("Valores para el login : "+ email + " " + pwd);
+              //console.log("Valores para el login : "+ email + " " + pwd);
           }
       });
       });

@@ -26,10 +26,10 @@ passport.use(
   new LocalStrategy({ usernameField: "email", passwordField: "password" },
     function (email, password, done) {
       sistema.loginUsuario({ email: email, password: password },function (user) {
-          if (user.email != -1) {
+          //if (user.email != -1) {
             return done(null, user);
-          } else {
-            return done(-1);}
+          //} else {
+            //return done(-1);}
 });}));
 
 app.use(passport.session());
@@ -73,11 +73,14 @@ app.post("/enviarJwt", function (request, response) {
 
 app.post('/loginUsuario',passport.authenticate("local",{failureRedirect:"/fallo",successRedirect: "/ok"}));
 
+app.post(
+  "/oneTap/callback",
+  passport.authenticate("google-one-tap", { failureRedirect: "/fallo" }),
+  function (req, res) {
+     res.redirect("/good");
+  }
+);
 
-
-app.get("/ok",function(request,response){
-response.send({nick:request.user.email})
-});
 
 /*app.post("/loginUsuario", (request, response) => {
   sistema.loginUsuario(request.body, (res) => {
@@ -86,6 +89,12 @@ response.send({nick:request.user.email})
 });*/
 
 ///////////// TODOS LOS APP.GETS ///////////////////////////////////////////////
+
+app.get("/ok",function(request,response){
+  response.send({nick:request.user.email})
+  });
+  
+
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -145,7 +154,7 @@ app.get(
 );
 
 app.get("/fallo", function (request, response) {
-  response.send({ nick: "nook" });
+  response.send({ nick: "-1" });
 });
 
 app.get("/cerrarSesion", haIniciado, function (request, response) {

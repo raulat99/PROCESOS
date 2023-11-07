@@ -101,7 +101,7 @@ function ClienteRest() {
             cw.mostrarObtenerUsuarios();
             //cw.mostrarLogin() //Hay que comentar la cookie y dejar esta función
           } else {
-            console.log("El nick ya está ocupado");
+            console.log("El nick ya está ocupado", true);
           }
           cw.limpiar();
           cw.mostrarMsg(msg);
@@ -130,7 +130,7 @@ function ClienteRest() {
             //cw.mostrarLogin();
           } else {
             console.log("El nick está ocupado");
-            cw.mostrarMsg("El nick " + data.nick + " está ocupado");
+            cw.mostrarMsg("El nick está ocupado", true);
 
           }
         },
@@ -155,9 +155,10 @@ function ClienteRest() {
             cw.limpiar();
             //cw.mostrarLogin();
           } else {
+            //cw.limpiar();
             console.log("No se puede iniciar sesión");
-            cw.mostrarMsg("No se puede iniciar sesión");
-            cw.limpiar();
+            cw.mostrarMsg("No se puede iniciar sesión", true);
+            
           }
         },
         error: function (xhr, textStatus, errorThrown) {

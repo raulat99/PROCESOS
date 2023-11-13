@@ -25,6 +25,17 @@ function CAD() {
       }
     );
   }
+  this.eliminarUsuario = function (objEliminar, callback) {
+    eliminar(this.usuario, objEliminar, callback);
+  };
+  function eliminar(coleccion, { _id }, callback) {
+    coleccion.deleteOne(ObjectId({ _id }), function (err, result) {
+      if (!err) {
+        console.log({ result, msg: "Elemento eliminado", criterio });
+        callback(result);
+      }
+    });
+  }
 
   function buscar(coleccion, criterio, callback) {
     coleccion.find(criterio).toArray(function (error, usuarios) {

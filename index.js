@@ -58,7 +58,7 @@ app.listen(PORT, () => {
 
 app.post("/registrarUsuario", function (request, response) {
   sistema.registrarUsuario(request.body, function (res) {
-    response.send({ nick: res.email });
+    response.send({ email: res.email });
   });
 });
 
@@ -67,7 +67,7 @@ app.post("/enviarJwt", function (request, response) {
   let user = JSON.parse(atob(jwt.split(".")[1]));
   let email = user.email;
   sistema.usuarioGoogle({ email: email }, function (obj) {
-    response.send({ nick: obj.email });
+    response.send({ email: obj.email });
   });
 });
 
@@ -84,14 +84,14 @@ app.post(
 
 /*app.post("/loginUsuario", (request, response) => {
   sistema.loginUsuario(request.body, (res) => {
-    response.send({ nick: res.email });
+    response.send({ email: res.email });
   });
 });*/
 
 ///////////// TODOS LOS APP.GETS ///////////////////////////////////////////////
 
 app.get("/ok",function(request,response){
-  response.send({nick:request.user.email})
+  response.send({email:request.user.email})
   });
   
 
@@ -108,19 +108,19 @@ app.get("/", function (request, response) {
 
 // /good antiguo
 /*app.get("/good", function(request,response){
-  let nick=request.user.emails[0].value;
-  if (nick){
-  sistema.agregarUsuario(nick);
+  let email=request.user.emails[0].value;
+  if (email){
+  sistema.agregarUsuario(email);
   }
   //console.log(request.user.emails[0].value);
-  response.cookie('nick',nick);
+  response.cookie('email',email);
   response.redirect('/');
  });*/
 
 app.get("/good", function (request, response) {
   let email = request.user.emails[0].value;
   sistema.usuarioGoogle({ email: email }, function (usr) {
-    response.cookie("nick", usr.email);
+    response.cookie("email", usr.email);
     response.redirect("/");
   });
 });
@@ -130,18 +130,18 @@ app.get("/confirmarUsuario/:email/:key", function (request, response) {
   let key = request.params.key;
   sistema.confirmarUsuario({ email: email, key: key }, function (usr) {
     if (usr.email != -1) {
-      response.cookie("nick", usr.email);
+      response.cookie("email", usr.email);
     }
     response.redirect("/");
   });
 });
 
 app.get("/cerrarSesion", haIniciado, function (request, response) {
-  let nick = request.user.nick;
+  let email = request.user.email;
   request.logout();
   response.redirect("/");
-  if (nick) {
-    sistema.eliminarUsuario(nick);
+  if (email) {
+    sistema.eliminarUsuario(email);
   }
 });
 
@@ -154,32 +154,32 @@ app.get(
 );
 
 app.get("/fallo", function (request, response) {
-  response.send({ nick: "-1" });
+  response.send({ email: "-1" });
 });
 
 app.get("/cerrarSesion", haIniciado, function (request, response) {
-  let nick = request.user.nick;
+  let email = request.user.email;
   request.logout();
   response.redirect("/");
-  if (nick) {
-    sistema.eliminarUsuario(nick);
+  if (email) {
+    sistema.eliminarUsuario(email);
   }
 });
 
-app.get("/agregarUsuario/:nick", haIniciado, function (request, response) {
-  let nick = request.params.nick;
-  let res = sistema.agregarUsuario(nick);
-  response.send(res);
-});
+// app.get("/agregarUsuario/:email", haIniciado, function (request, response) {
+//   let email = request.params.email;
+//   let res = sistema.agregarUsuario(email);
+//   response.send(res);
+// });
 
 app.get("/obtenerUsuarios", haIniciado, function (request, response) {
   let res = sistema.obtenerUsuarios();
   response.send(res);
 });
 
-app.get("/usuarioActivo/:nick", haIniciado, function (request, response) {
-  let nick = request.params.nick;
-  let res = sistema.usuarioActivo(nick);
+app.get("/usuarioActivo/:email", haIniciado, function (request, response) {
+  let email = request.params.email;
+  let res = sistema.usuarioActivo(email);
   response.send(res);
 });
 
@@ -188,8 +188,8 @@ app.get("/numeroUsuarios", haIniciado, function (request, response) {
   response.send(res);
 });
 
-app.get("/eliminarUsuario/:nick", haIniciado, function (request, response) {
-  let nick = request.params.nick;
-  let res = sistema.eliminarUsuario(nick);
+app.get("/eliminarUsuario/:email", haIniciado, function (request, response) {
+  let email = request.params.email;
+  let res = sistema.eliminarUsuario(email);
   response.send(res);
 });

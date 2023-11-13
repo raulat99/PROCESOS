@@ -7,14 +7,14 @@ function Sistema(test){
     this.usuarios={};
     this.test=test;
     this.cad = new datos.CAD();
-    this.agregarUsuario=function(nick){
-        let res={"nick":-1};
-        if (!this.usuarios[nick]){
-        this.usuarios[nick]=new Usuario(nick);
-        res.nick=nick;
+    this.agregarUsuario=function(email){
+        let res={"email":-1};
+        if (!this.usuarios[email]){
+        this.usuarios[email]=new Usuario(email);
+        res.email=email;
         }
         else{
-        console.log("el nick "+nick+" está en uso");
+        console.log("el email "+email+" está en uso");
         }
         return res;
         }
@@ -22,21 +22,21 @@ function Sistema(test){
     this.obtenerUsuarios=()=>{return this.usuarios}
     
     this.obtenerTodosNick=()=>{ 
-        var nicks=[];
-        for(var nick in this.usuarios){
-            nicks.push(nick);
+        var emails=[];
+        for(var email in this.usuarios){
+            emails.push(email);
         }
-        return nicks;    
+        return emails;    
     }
 
-    this.obtenerUsuarioConNick = (nick)=>{return this.usuarios[nick]}
+    this.obtenerUsuarioConNick = (email)=>{return this.usuarios[email]}
 
-    this.usuarioActivo =(nick)=>{return {res: (nick in this.usuarios)}}
+    this.usuarioActivo =(email)=>{return {res: (email in this.usuarios)}}
 
-    this.eliminarUsuario = (nick)=>{ 
-        if(this.usuarioActivo(nick).res){
-            delete this.usuarios[nick];
-            return {res: nick}
+    this.eliminarUsuario = (email)=>{ 
+        if(this.usuarioActivo(email).res){
+            delete this.usuarios[email];
+            return {res: email}
         }else {
             return {res: "-1"}
         }
@@ -53,14 +53,14 @@ function Sistema(test){
     this.usuarioGoogle=function(usr,callback){
         this.cad.buscarOCrearUsuario(usr,function(res){
             console.log("El usuario " + res.email + " está registrado en el sistema");
-        callback(res);
+            callback(res);
+            modelo.agregarUsuario(usr)
         });
         }
         
     this.registrarUsuario = function (obj, callback) {
       let modelo = this;
-      if (!obj.nick) {
-        obj.nick = obj.email;
+      if (!obj.email) {
         bcrypt.hash(obj.password, 10, function(err, hash) {
             obj.password = hash        
         });    
@@ -78,8 +78,12 @@ function Sistema(test){
               modelo.cad.insertarUsuario(obj, function (res) {
                 callback(res);
               });
+              
+              if(!modelo.test){
+                correo.enviarEmail(obj.email, obj.key, "Confirmar cuenta");
+              }
+
               console.log("Usuario creado, no existía previamente")
-              correo.enviarEmail(obj.email, obj.key, "Confirmar cuenta");
             });
           } else {
             callback({ email: -1, mensaje: "Usuario no encontrado" });
@@ -88,9 +92,13 @@ function Sistema(test){
     };
 
     this.loginUsuario = (obj, callback) => {
+      let modelo = this;
+      console.log("Buscando usuario " + " " + obj.email)
       this.cad.buscarUsuario({ email: obj.email, confirmada: true }, (usr) => {
         
+        //console.log("Usuario " + usr.email + " " + usr.password + " " + usr.confirmada)
         if (!usr){
+          console.log(-1)
           callback({"email":-1});
           return -1;
         }
@@ -99,14 +107,20 @@ function Sistema(test){
           bcrypt.compare(obj.password, usr.password, function (err, result) {
             if (err) {
               console.error("Error al comparar contraseñas:", err);
+              console.log("Error al comparar contraseñas:")
               callback({ email: -1, mensaje: "Error al comparar contraseñas" });
             } else if (result) {
+              console.log("Contraseña válida")
               callback(usr); // Contraseña válida
+              modelo.agregarUsuario(usr)
             } else {
+              console.log("Contraseña incorrecta")
               callback({ email: -1, mensaje: "Contraseña incorrecta" }); // Contraseña incorrecta
             }
           });
         } else {
+
+          console.log("Usuario no encontrado o contraseña no establecida")
           callback({
             email: -1,
             mensaje: "Usuario no encontrado o contraseña no establecida",
@@ -141,10 +155,11 @@ function Sistema(test){
     
 }
 
-function Usuario(nick){
-    this.nick=nick;
-    this.email;
+function Usuario(usr){
+    this.nick=usr.nick;
+    this.email=usr.email;
     this.password;
+
 }
 
 

@@ -1,34 +1,34 @@
 function ControlWeb(){
 
-    this.mostrarAgregarUsuario = ()=>{
-        
-      $('#bnv').remove();
-      $('#mAU').remove();
-      let cadena='<div id="mAU">';
-      cadena = cadena + '<div class="card"><div class="card-body">';
-      cadena = cadena +'<div class="form-group">';
-      cadena = cadena + '<h4 id="MsgAgregarUsuario"> Agrega un nuevo usuario </h4>';
-      cadena = cadena + '<label for="nick">Nick:</label>';
-      cadena = cadena + '<p><input type="text" class="form-control" id="nick" placeholder="introduce un nick"></p>';
-      cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
-      
-      cadena = cadena + '<h5 id="msgAURespuesta">  </h5> ';
-      
-      cadena = cadena + '<button id="btnAU" type="submit" class="btn btn-primary">Submit</button>';
-      cadena = cadena + '<style>#btnAU:hover {}</style>'
-      cadena = cadena + '</div>';
-      cadena = cadena + '</div></div></div>';
+    //this.mostrarAgregarUsuario = ()=>{
+    //    
+    //  $('#bnv').remove();
+    //  $('#mAU').remove();
+    //  let cadena='<div id="mAU">';
+    //  cadena = cadena + '<div class="card"><div class="card-body">';
+    //  cadena = cadena +'<div class="form-group">';
+    //  cadena = cadena + '<h4 id="MsgAgregarUsuario"> Agrega un nuevo usuario </h4>';
+    //  cadena = cadena + '<label for="email">Nick:</label>';
+    //  cadena = cadena + '<p><input type="text" class="form-control" id="email" placeholder="introduce un email"></p>';
+    //  cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
+    //  
+    //  cadena = cadena + '<h5 id="msgAURespuesta">  </h5> ';
+    //  
+    //  cadena = cadena + '<button id="btnAU" type="submit" class="btn btn-primary">Submit</button>';
+    //  cadena = cadena + '<style>#btnAU:hover {}</style>'
+    //  cadena = cadena + '</div>';
+    //  cadena = cadena + '</div></div></div>';
 
-        $("#au").append(cadena);
+    //    $("#au").append(cadena);
 
-        $("#btnAU").on("click", ()=>{
-            let nick=$("#nick").val();
-            if(nick)
-            {
-                rest.agregarUsuario(nick, "#msgAURespuesta")
-            }
-        });
-    }
+    //    $("#btnAU").on("click", ()=>{
+    //        let email=$("#email").val();
+    //        if(email)
+    //        {
+    //            rest.agregarUsuario(email, "#msgAURespuesta")
+    //        }
+    //    });
+    //}
 
     this.mostrarObtenerUsuarios = ()=>{
       $('#mOU').remove();
@@ -81,7 +81,7 @@ function ControlWeb(){
       cadena = cadena + '<h4 id="MsgUA"> Mostrar usuario activo </h4>';
       cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
       cadena = cadena + '<h5 id="msgUARespuesta">  </h5> ';
-      cadena = cadena + '<p><input type="text" class="form-control" id="nickUA" placeholder="introduce un nick"></p>';
+      cadena = cadena + '<p><input type="text" class="form-control" id="emailUA" placeholder="introduce un email"></p>';
       cadena = cadena + '<button id="btnUA" type="submit" class="btn btn-primary">Submit</button>';
       cadena = cadena + '<style>#btnUA:hover {}</style>'
       cadena = cadena + '</div>';
@@ -90,10 +90,10 @@ function ControlWeb(){
         $("#ua").append(cadena);
 
         $("#btnUA").on("click", ()=>{
-            let nick=$("#nickUA").val();
-            if(nick)
+            let email=$("#emailUA").val();
+            if(email)
             {
-                rest.usuarioActivo(nick,"#msgUARespuesta" )
+                rest.usuarioActivo(email,"#msgUARespuesta" )
             }
         });
     }
@@ -106,7 +106,7 @@ function ControlWeb(){
       cadena = cadena + '<h4 id="MsgEU"> Eliminar usuario </h4>';
       cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> ';
       cadena = cadena + '<h5 id="msgEURespuesta">  </h5> ';
-      cadena = cadena + '<p><input type="text" class="form-control" id="nickEU" placeholder="introduce un nick"></p>';
+      cadena = cadena + '<p><input type="text" class="form-control" id="emailEU" placeholder="introduce un email"></p>';
       cadena = cadena + '<button id="btnEU" type="submit" class="btn btn-primary">Submit</button>';
       cadena = cadena + '<style>#btnEU:hover {}</style>'
       cadena = cadena + '</div>';
@@ -115,10 +115,10 @@ function ControlWeb(){
         $("#ua").append(cadena);
 
         $("#btnEU").on("click", ()=>{
-            let nick=$("#nickEU").val();
-            if(nick)
+            let email=$("#emailEU").val();
+            if(email)
             {
-                rest.eliminarUsuario(nick,"#msgEURespuesta" )
+                rest.eliminarUsuario(email,"#msgEURespuesta" )
             }
         });
     }
@@ -137,11 +137,11 @@ function ControlWeb(){
     }
 
     this.comprobarSesion = function () {
-      //let nick=localStorage.getItem("nick");
-      let nick = $.cookie("nick");
-      if (nick) {
-        cw.mostrarMsg("Bienvenido al sistema, " + nick);
-        cw.mostrarAgregarUsuario();
+      //let email=localStorage.getItem("email");
+      let email = $.cookie("email");
+      if (email) {
+        cw.mostrarMsg("Bienvenido al sistema, " + email);
+        //cw.mostrarAgregarUsuario();
         cw.mostrarNumeroUsuarios();
         cw.mostrarUsuarioActivo();
         cw.mostrarEliminarUsuario();
@@ -180,20 +180,20 @@ function ControlWeb(){
     }
 
     /*this.salir=function(){
-        $.removeCookie("nick");
+        $.removeCookie("email");
         location.reload();
     };*/
 
     this.salir=function(){
-      //localStorage.removeItem("nick");
-      $.removeCookie("nick");
+      //localStorage.removeItem("email");
+      $.removeCookie("email");
       location.reload();
       rest.cerrarSesion();
       }
       
 
     this.mostrarRegistro=()=>{
-      if ($.cookie("nick")) {
+      if ($.cookie("email")) {
         return true;
       }
       $("#fmRegistro").remove();
@@ -211,7 +211,7 @@ function ControlWeb(){
     }
 
     this.mostrarLogin = ()=>{
-      if ($.cookie("nick")) {
+      if ($.cookie("email")) {
         return true;
       }
       $("#fmLogin").remove();

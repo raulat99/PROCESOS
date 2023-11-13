@@ -2,15 +2,20 @@ const modelo = require("./modelo.js");
 
 describe('El sistema', function() {
    let sistema;
-  
-   beforeEach(()=>{sistema=new modelo.Sistema(true)});
+   let usr;
+   beforeEach(()=>{
+      sistema=new modelo.Sistema(true)
+      usr = {"nick": "Pepe", "email":"pepe@pepe.es"}
+   });
   
    it('inicialmente no hay usuarios', ()=> {
     expect(sistema.numeroUsuarios().res).toEqual(0)});
 
     it('agregar usuario', ()=> {
       sistema.agregarUsuario("Pepe")
-      expect(sistema.usuarioActivo("Pepe").res).toEqual(true)});
+      sistema.agregarUsuario(usr)
+      expect(sistema.usuarioActivo("Pepe").res).toEqual(true)
+   });
 
    it('obtener usuarios', ()=>{
       sistema.agregarUsuario("Pepe")
@@ -39,6 +44,40 @@ describe('El sistema', function() {
       expect(sistema.numeroUsuarios().res).toEqual(1);
       expect(sistema.usuarioActivo("Pepe").res).toEqual(true)});
 
+      describe('Métodos que acceden a datos', function() {
+
+         let usrTest = {"email": "test@test.es", "password": "1234", "nick":"test"}
+      
+         beforeEach((done)=>{
+            sistema.cad.conectar(()=>{
+               //sistema.registrarUsuario(usrTest, (res)=>{
+                  //sistema.confirmarCuenta(usrTest.email, ()=>{
+                     done();
+                  //});
+               //})
+
+               //done();
+            })
+         })
+      
+         it("Inicio de sesión correcto", (done)=>{
+            sistema.loginUsuario(usrTest, (res)=>{
+               expect(res.email).toEqual(usrTest.email);
+               expect(res.email).toNotEqual(-1);
+               done();
+            })
+         });
+         it("Inicio de sesión incorrecto", ()=>{
+            let usr1 = {"email": "test@test.es", "password": "test", "nick":"test"}
+            sistema.loginUsuario(usr1, (res)=>{
+               expect(res.email).toNotEqual(-1);
+               done();
+            })
+         });
+      });
 });
+
+
+
 
 

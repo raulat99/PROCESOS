@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
-const url="http://localhost:3000/";
+//local
+//const url="http://localhost:3000/";
+//prod
+const url="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/"
+
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -8,8 +12,6 @@ const transporter = nodemailer.createTransport({
         pass: 'ccaq egbq pklz pgla'
     }
 });
-
-//send();
 
 module.exports.enviarEmail=async function(direccion, key,men) {
     const result = await transporter.sendMail({

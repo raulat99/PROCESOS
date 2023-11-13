@@ -153,6 +153,10 @@ function ClienteRest() {
             $.cookie("email", data.email);
             cw.mostrarMsg("Bienvenido al sistema, " + data.email);
             cw.limpiar();
+            cw.mostrarNumeroUsuarios();
+            cw.mostrarUsuarioActivo();
+            cw.mostrarEliminarUsuario();
+            cw.mostrarObtenerUsuarios();
             //cw.mostrarLogin();
           } else {
             //cw.limpiar();

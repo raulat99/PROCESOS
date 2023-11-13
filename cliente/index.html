@@ -16,7 +16,7 @@
  <script src="./cliente/controlWeb.js"></script>
  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
- <!--<script src="./modelo.js"></script>-->
+ <!--<script src="./modelo.js"></script> -->
 </head>
 <body onload="ini();">
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -47,12 +47,21 @@
     </div>
 
     
+    <!-- local
     <div 
       id="g_id_onload"
       data-client_id="277970597970-43lh2h0c4n9c7i38ebkk07qdftv3mhhc.apps.googleusercontent.com"
       data-login_uri="http://localhost:3000/oneTap/callback"
       data-skip_prompt_cookie="email"
-
+    ></div>
+    -->
+    
+    <!-- prod -->
+    <div 
+      id="g_id_onload"
+      data-client_id="277970597970-3k4dolmp24icn4hel7hib86guhhbj9r1.apps.googleusercontent.com"
+      data-login_uri="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/google/callback"
+      data-skip_prompt_cookie="email"
     ></div>
 
         <script>

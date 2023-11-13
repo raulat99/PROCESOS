@@ -51,6 +51,8 @@ function Sistema(test){
     }
 
     this.usuarioGoogle=function(usr,callback){
+
+        let modelo = this
         this.cad.buscarOCrearUsuario(usr,function(res){
             console.log("El usuario " + res.email + " está registrado en el sistema");
             callback(res);

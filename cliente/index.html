@@ -46,29 +46,30 @@
         <div id="registro"></div>
     </div>
 
-    
-    <!-- local
+
     <div 
       id="g_id_onload"
       data-client_id="277970597970-43lh2h0c4n9c7i38ebkk07qdftv3mhhc.apps.googleusercontent.com"
-      data-login_uri="http://localhost:3000/oneTap/callback"
-      data-skip_prompt_cookie="email"
-    ></div>
-    -->
-    
-    <!-- prod -->
-    <div 
-      id="g_id_onload"
-      data-client_id="277970597970-3k4dolmp24icn4hel7hib86guhhbj9r1.apps.googleusercontent.com"
+
       data-login_uri="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/google/callback"
       data-skip_prompt_cookie="email"
     ></div>
+
+    <!--<div 
+    id="g_id_onload"
+    data-client_id="277970597970-43lh2h0c4n9c7i38ebkk07qdftv3mhhc.apps.googleusercontent.com"
+
+    data-login_uri="http://localhost:3000/oneTap/callback"
+    data-skip_prompt_cookie="email"
+  ></div>-->
+
 
         <script>
             function ini() {
                 cw = new ControlWeb();
                 rest = new ClienteRest();
                 cw.comprobarSesion();
+                //document.getElementById("g_id_onload").setAttribute("data-login_uri",`${window.location.href}/google/callback`)  
             };
         </script>
     

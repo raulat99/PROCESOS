@@ -1,17 +1,44 @@
 const fs = require("fs");
 const express = require("express");
 const app = express();
+const httpServer = require('http').Server(app);
+const { Server } = require("socket.io");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const args = process.argv.slice(2);
 const LocalStrategy = require("passport-local").Strategy;
 require("./servidor/passport-setup.js");
 const modelo = require("./servidor/modelo.js");
+const moduloWS = require("./servidor/servidorWS.js")
 const bodyParser = require("body-parser");
+
 
 let test = false;
 test = eval(args[0]); //test=true
 
+
+const PORT = process.env.PORT || 3000;
+
+const haIniciado = function (request, response, next) {
+  if (request.user) {
+    next();
+  } else {
+    response.redirect("/");
+  }
+};
+
+let ws = new moduloWS.ServidorWS();
+let io = new Server();
+
+io.listen(httpServer)
+let sistema = new modelo.Sistema(test);
+
+httpServer.listen(PORT, () => {
+  console.log(`App está escuchando en el puerto ${PORT}`);
+  console.log("Ctrl+C para salir");
+});
+
+ws.lanzarServidor(io)
 ///////////// TODOS LOS APP.USE ///////////////////////////////////////////////
 
 app.use(express.static(__dirname + "/"));
@@ -36,23 +63,6 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-const PORT = process.env.PORT || 3000;
-
-const haIniciado = function (request, response, next) {
-  if (request.user) {
-    next();
-  } else {
-    response.redirect("/");
-  }
-};
-
-let sistema = new modelo.Sistema(test);
-
-app.listen(PORT, () => {
-  console.log(`App está escuchando en el puerto ${PORT}`);
-  console.log("Ctrl+C para salir");
-});
 
 ///////////// TODOS LOS APP.POST ///////////////////////////////////////////////
 

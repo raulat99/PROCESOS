@@ -5,10 +5,6 @@ const url="http://localhost:3000/";
 //prod
 //const url="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/"
 
-let options = {
-    user: '', //raulat00@gmail.com
-    pass: "" //'ccaq egbq pklz pgla'
-}
 
 /*gv.accessCLAVECORREO((clave)=>{
     options.pass=clave;
@@ -22,9 +18,15 @@ gv.obtenerOptions((res)=>{
     })
 })*/
 
+let options = {
+    user: '', 
+    pass: "" 
+}
+
 module.exports.conectar=(callback)=>{
     gv.obtenerOptions((res)=>{
         options= res;
+        
         callback(res)
     })
 }

@@ -157,7 +157,7 @@ function Sistema(test){
 
     correo.conectar((res)=>{
       console.log("Variables secretas obtenidas")
-      console.log(res)
+      //console.log(res)
     })
     
 }

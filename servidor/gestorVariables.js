@@ -32,6 +32,6 @@ module.exports.obtenerOptions = async (callback)=>{
   options.user = user;
   options.pass = pass;
 
-  console.log(options)
+  //console.log(options)
   callback(options);
 }

@@ -17,9 +17,9 @@ passport.use(
       clientSecret: "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",
 
       //prod
-      callbackURL: "https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/google/callback",
+      //callbackURL: "https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/google/callback",
       //local
-      //callbackURL: "http://localhost:3000/google/callback",
+      callbackURL: "http://localhost:3000/google/callback",
 
     },
     function (accessToken, refreshToken, profile, done) {

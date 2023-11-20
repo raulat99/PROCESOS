@@ -1,19 +1,42 @@
 const nodemailer = require('nodemailer');
+const gv = require('./gestorVariables.js');
 //local
-//const url="http://localhost:3000/";
+const url="http://localhost:3000/";
 //prod
-const url="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/"
+//const url="https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/"
 
+let options = {
+    user: '', //raulat00@gmail.com
+    pass: "" //'ccaq egbq pklz pgla'
+}
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'raulat00@gmail.com',
-        pass: 'ccaq egbq pklz pgla'
-    }
-});
+/*gv.accessCLAVECORREO((clave)=>{
+    options.pass=clave;
+})*/
+/*
+gv.obtenerOptions((res)=>{
+    options= res;
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: options
+    })
+})*/
+
+module.exports.conectar=(callback)=>{
+    gv.obtenerOptions((res)=>{
+        options= res;
+        callback(res)
+    })
+}
+
 
 module.exports.enviarEmail=async function(direccion, key,men) {
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: options
+    });
+
     const result = await transporter.sendMail({
         from: 'tu-cuenta@gmail.com',
         to: direccion,

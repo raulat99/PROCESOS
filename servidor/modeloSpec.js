@@ -63,14 +63,14 @@ describe('El sistema', function() {
          it("Inicio de sesión correcto", (done)=>{
             sistema.loginUsuario(usrTest, (res)=>{
                expect(res.email).toEqual(usrTest.email);
-               expect(res.email).toNotEqual(-1);
+               expect(res.email).not.toEqual(-1);
                done();
             })
          });
-         it("Inicio de sesión incorrecto", ()=>{
+         it("Inicio de sesión incorrecto", (done)=>{
             let usr1 = {"email": "test@test.es", "password": "test", "nick":"test"}
             sistema.loginUsuario(usr1, (res)=>{
-               expect(res.email).toNotEqual(-1);
+               expect(res.email).toEqual(-1);
                done();
             })
          });

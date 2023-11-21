@@ -227,4 +227,11 @@ function ControlWeb(){
       });
       });
     }
+
+    this.mostrarModal=(msg)=>{
+      $("#msgModal").remove();
+      let cadena = "<div id='msgModal'>"+msg+"</div>"
+      $('#bModal').append(cadena);
+      $('#miModal').modal();
+    }
 }

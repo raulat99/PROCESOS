@@ -131,7 +131,7 @@ function ClienteRest() {
           } else {
             console.log("El email está ocupado");
             cw.mostrarMsg("El email está ocupado", true);
-
+            cw.mostrarModal("El email está ocupado")
           }
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -162,7 +162,7 @@ function ClienteRest() {
             //cw.limpiar();
             console.log("No se puede iniciar sesión " + data.email + " " + data.password);
             cw.mostrarMsg("No se puede iniciar sesión", true);
-            
+            cw.mostrarModal("No se puede iniciar sesión")
           }
         },
         error: function (xhr, textStatus, errorThrown) {

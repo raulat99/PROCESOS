@@ -95,6 +95,9 @@ function CAD() {
     await client.connect();
     const database = client.db("sistema");
     cad.usuarios = database.collection("usuarios");
+
+    cad.partida = database.collection("partida");
+
     callback(database);
   };
 }

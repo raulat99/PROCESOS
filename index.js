@@ -38,7 +38,8 @@ httpServer.listen(PORT, () => {
   console.log("Ctrl+C para salir");
 });
 
-ws.lanzarServidor(io)
+ws.lanzarServidor(io, sistema)
+
 ///////////// TODOS LOS APP.USE ///////////////////////////////////////////////
 
 app.use(express.static(__dirname + "/"));

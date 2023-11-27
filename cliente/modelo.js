@@ -5,7 +5,7 @@
 
 function Sistema(test){
     this.usuarios={};
-    this.partidas={};
+    this.partidas=[];
     this.test=test;
     //this.cad = new datos.CAD();
     this.agregarUsuario=function(usr){
@@ -168,9 +168,10 @@ function Sistema(test){
       // asignar al usuario como jugador de la partida
         partida.jugadores.push(this.obtenerUsuarioConEmail(email))
       // incluir partida en la colección de partidas
-        this.partidas[partida.codigo] = partida
+        this.partidas.push(partida)
       }else{
         console.log("El email no existe")
+        return -1;
       }
       }
       
@@ -178,29 +179,48 @@ function Sistema(test){
       // obtener el usuario cuyo email es “email”
       let usuario = this.obtenerUsuarioConEmail(email)
       // obtener la partida cuyo código es “codigo”
-      let partida = this.partidas[codigo]
+      let partida = (this.partidas.filter(partida => partida.codigo == codigo))[0]
       // si existen el usuario y la partida, entonces
-
-      if(partida){
-        console.log("Partida")
-      }
-      if(usuario){
-        console.log("Usuario")
-      }
-
-      if(partida && usuario){
+      if(partida && usuario && !this.comprobarJugadorEstaEnPartida(usuario, partida)){
         // asignar al usuario a la partida
         console.log("Existen usuario y partida")
         partida.asignarJugadorPartida(usuario)
         console.log(this.partidas)
       }else{
           // en caso contrario, mostrar un mensaje
-          console.log("No se ha encontrado usuario o partida")
+          console.log("No se ha encontrado usuario o partida o ya es el propietario")
+          return -1;
       }      
     }        
 
-    this.obtenerPartidas = ()=>{
-      
+    this.obtenerPartidasDisponibles = ()=>{
+      //obtener solo las disponibles
+      //array temporal
+      var partidasTemporal = []
+      var partidas = this.partidas
+      //recorrer el array asociativo
+
+      partidas.map((partida)=>{
+        if(partida.jugadores.length < partida.maxJug){
+          //meter un JSON en el array con el propietario/creado y el código
+          partidasTemporal.push(
+            {
+              propietario: partida.jugadores[0].email,
+              codigo: partida.codigo              
+            }
+          )
+        }
+      })
+      console.log(partidasTemporal)
+      return partidasTemporal
+    }
+
+    this.obtenerPropietarioPartida = (partida)=>{
+      return partida.jugadores[0]
+    }
+
+    this.comprobarJugadorEstaEnPartida = (usuario, partida)=>{
+      return partida.jugadores.find(jugador => jugador.email == usuario.email)?true:false
     }
 
     if(!this.test){

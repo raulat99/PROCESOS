@@ -152,6 +152,9 @@ function ClienteRest() {
             console.log("Usuario " + data.email + " ha sido logueado");
             $.cookie("email", data.email);
             cw.mostrarMsg("Bienvenido al sistema, " + data.email);
+            
+            ws.email=data.email
+
             cw.limpiar();
             cw.mostrarNumeroUsuarios();
             cw.mostrarUsuarioActivo();
@@ -172,6 +175,12 @@ function ClienteRest() {
         contentType: "application/json",
       });
     };
+
+    //this.comprobarUsuario=function(email){
+    //  $.getJSON("/comprobarUsuario"+"/"+email,function(datos){
+//
+    //  })
+    //};
 
     this.cerrarSesion=function(){
       $.getJSON("/cerrarSesion",function(){

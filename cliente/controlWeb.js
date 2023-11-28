@@ -140,6 +140,7 @@ function ControlWeb(){
       //let email=localStorage.getItem("email");
       let email = $.cookie("email");
       if (email) {
+        //rest.comprobarUsuario(email)
         cw.mostrarMsg("Bienvenido al sistema, " + email);
         //cw.mostrarAgregarUsuario();
         cw.mostrarNumeroUsuarios();

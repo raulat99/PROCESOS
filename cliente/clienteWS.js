@@ -1,10 +1,13 @@
 function ClienteWS () {
-  this.socket
-  this.email
-  this.codigo
-
   this.conectar = () => {
-    this.socket = io.connect()
+    this.socket = io(
+      {
+        auth: {
+          serverOffset: 0,
+          username: this.email
+        }
+      }
+    ).connect()
     this.lanzarServidorWS()
   }
   this.crearPartida = () => {
@@ -19,10 +22,18 @@ function ClienteWS () {
       })
   }
 
+  this.enviarMensajeChat = ({ message }) => {
+    this.socket.emit('chatMessage', message)
+  }
+
   this.lanzarServidorWS = () => {
     const cli = this
-    this.socket.on('connect', function () {
+    this.socket.on('connection', function () {
       console.log('Usuario conectado al servidor de WebSockets')
+    })
+
+    this.socket.on('chatMessage', (msg, serverOffset, username) => {
+      cw.mostrarNuevoMensajeChat(msg, serverOffset, username)
     })
 
     this.socket.on('unidoAPartida', (datos) => {

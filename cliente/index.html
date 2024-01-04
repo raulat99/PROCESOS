@@ -23,7 +23,6 @@
         cw = new ControlWeb();
         rest = new ClienteRest();
         ws = new ClienteWS();
-        ws.conectar();
         cw.comprobarSesion();
       }
     </script>
@@ -43,7 +42,7 @@
               <div class="flex space-x-4">
                 <a href="#" onclick="cw.mostrarLogin()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Iniciar Sesion</a>
                 <a href="#" onclick="cw.mostrarRegistro()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"  aria-current="page">Registrarse</a>
-                <a href="#" onclick="cw.mostrarChat()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"  aria-current="page">Chat</a>
+                <a href="#" onclick="ws.conectar(); cw.mostrarChat()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"  aria-current="page">Chat</a>
                 <a href="#" onclick="cw.salir()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"  aria-current="page">Salir</a>
               </div>
             </div>
@@ -81,7 +80,8 @@
       <div id="ua"></div>
       <div id="eu"></div>
       <div id="registro"></div>
-      <div id="chat"></div>
+      <div id="chat">
+      </div>
     </section>
   
     <!--PROD

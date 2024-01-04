@@ -17,7 +17,7 @@ function ServidorWS () {
 
     const db = createClient.createClient({
       url: 'libsql://just-green-goblin-raulat99.turso.io',
-      authToken: process.env.DB_TOKEN
+      authToken: await require('./gestorVariables.js').obtenerTokenBBDD()
     })
 
     await db.execute(`
@@ -36,7 +36,9 @@ function ServidorWS () {
         console.log('an user has disconnected')
       })
 
-      socket.on('chat message', async (msg) => {
+      socket.on('chatMessage', async (msg) => {
+        console.log('CHATMESSAGE SERVIDOR SOCKET ON')
+
         let result
         const username = socket.handshake.auth.username ?? 'anonymous'
         console.log({ username })
@@ -49,19 +51,21 @@ function ServidorWS () {
           console.error(e)
           return
         }
-        io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
+        io.emit('chatMessage', msg, result.lastInsertRowid.toString(), username)
       })
 
       // recuperar los mensajes anteriores
       if (!socket.recovered) {
         try {
+          console.log('!SOCKET.RECOVERED')
+
           const result = await db.execute({
             sql: 'SELECT id, content, user FROM messages WHERE id > ?',
             args: [socket.handshake.auth.serverOffset ?? 0]
           })
 
           result.rows.forEach(row => {
-            socket.emit('chat message', row.content, row.id.toString(), row.user)
+            socket.emit('chatMessage', row.content, row.id.toString(), row.user)
           })
         } catch (e) {
           console.error(e)

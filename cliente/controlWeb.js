@@ -1,8 +1,36 @@
 /* eslint-disable no-undef */
 function ControlWeb () {
-  this.mostrarChat = () => {
-    this.limpiarTodoMenosChat()
-    $('#chat').load('./cliente/chat.html')
+  this.enviarMensajeChat = (value) => {
+    ws.socket.emit('chatMessage', value)
+  }
+
+  this.mostrarChat = function () {
+    this.limpiarTodoDivs()
+    $('#chat').load('./cliente/chat.html', () => {
+      $('#form')[0].addEventListener('submit', (e) => {
+        e.preventDefault()
+        const value = $('#input').val()
+        if (value) {
+          this.enviarMensajeChat(value)
+          input.value = ''
+        }
+      })
+    }
+    )
+  }
+
+  this.mostrarNuevoMensajeChat = (msg, serverOffset, username) => {
+    const messages = document.getElementById('messages')
+    const item = `            
+      <li class="flex justify-end mb-4">
+          <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+              ${msg}
+          </div>
+          <small>${username} </small>
+      </li>`
+    ws.socket.auth.serverOffset = serverOffset
+    messages.insertAdjacentHTML('beforeend', item)
+    messages.scrollTop = messages.scrollHeight
   }
 
   this.mostrarMsgId = (msg, id) => {
@@ -31,12 +59,7 @@ function ControlWeb () {
     }
   }
 
-  this.limpiar = function () {
-    $('#fmRegistro').remove()
-    $('#fmLogin').remove()
-  }
-
-  this.limpiarTodoMenosChat = function () {
+  this.limpiarTodoDivs = function () {
     $('#msg').remove()
     $('#au').remove()
     $('#nu').remove()

@@ -13,10 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/secret-manager": "^5.0.1",
+    "@libsql/client": "^0.4.0-pre.5",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-session": "^2.0.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "flowbite": "^2.2.1",
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "jasmine": "^5.1.0",
@@ -26,9 +29,14 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-google-one-tap": "^1.0.1",
     "passport-local": "^1.0.0",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "3.0.1",
+    "standard": "17.1.0"
+  },
+  "eslintConfig": {
+    "extends": "standard"
   }
 }

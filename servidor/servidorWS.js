@@ -37,8 +37,6 @@ function ServidorWS () {
       })
 
       socket.on('chatMessage', async (msg) => {
-        console.log('CHATMESSAGE SERVIDOR SOCKET ON')
-
         let result
         const username = socket.handshake.auth.username ?? 'anonymous'
         console.log({ username })
@@ -57,8 +55,6 @@ function ServidorWS () {
       // recuperar los mensajes anteriores
       if (!socket.recovered) {
         try {
-          console.log('!SOCKET.RECOVERED')
-
           const result = await db.execute({
             sql: 'SELECT id, content, user FROM messages WHERE id > ?',
             args: [socket.handshake.auth.serverOffset ?? 0]

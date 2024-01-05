@@ -150,14 +150,10 @@ function ClienteRest () {
 
           ws.email = data.email
 
-          cw.limpiar()
-          cw.mostrarNumeroUsuarios()
-          cw.mostrarUsuarioActivo()
-          cw.mostrarEliminarUsuario()
-          cw.mostrarObtenerUsuarios()
-          // cw.mostrarLogin();
+          $('#inicioSesionNav').remove()
+          $('#RegistroSesionNav').remove()
+          cw.mostrarChat()
         } else {
-          // cw.limpiar();
           console.log('No se puede iniciar sesión ' + data.email + ' ' + data.password)
           cw.mostrarMsg('No se puede iniciar sesión', true)
           cw.mostrarModal('No se puede iniciar sesión')

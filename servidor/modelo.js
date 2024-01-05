@@ -65,7 +65,7 @@ function Sistema (test) {
   this.registrarUsuario = function (obj, callback) {
     const modelo = this
     if (!obj.email) {
-      bcrypt.hash(obj.password, 10, function (err, hash) {
+      bcrypt.hash(obj.password, 10, function (_err, hash) {
         obj.password = hash
       })
     }
@@ -74,7 +74,7 @@ function Sistema (test) {
         obj.key = Date.now().toString()
         obj.confirmada = true // false
 
-        bcrypt.hash(obj.password, 10, function (err, hash) {
+        bcrypt.hash(obj.password, 10, function (_err, hash) {
           obj.password = hash
           console.log(obj.password)
           console.log(obj.hash)
@@ -224,7 +224,7 @@ function Sistema (test) {
       console.log('Conectado a Mongo Atlas')
     })
 
-    correo.conectar((res) => {
+    correo.conectar((_res) => {
       console.log('Variables secretas obtenidas')
       // console.log(res)
     })

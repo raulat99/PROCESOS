@@ -48,18 +48,25 @@ function ControlWeb () {
   }
 
   this.mostrarOperacionesConUsuarios = () => {
-    this.limpiarTodoDivs()
     const email = $.cookie('email')
-    cw.mostrarMsg('Bienvenido al sistema, ' + email)
-    cw.mostrarNumeroUsuarios()
-    cw.mostrarUsuarioActivo()
-    cw.mostrarEliminarUsuario()
-    cw.mostrarObtenerUsuarios()
+
+    if (email) {
+      this.limpiarTodoDivs()
+      cw.mostrarMsg('Bienvenido al sistema, ' + email)
+      cw.mostrarNumeroUsuarios()
+      cw.mostrarUsuarioActivo()
+      cw.mostrarEliminarUsuario()
+      cw.mostrarObtenerUsuarios()
+    } else {
+      cw.mostrarLogin()
+    }
   }
 
   this.comprobarSesion = function () {
     const email = $.cookie('email')
     if (email) {
+      $('#inicioSesionNav').remove()
+      $('#RegistroSesionNav').remove()
       this.mostrarChat()
     } else {
       cw.mostrarLogin()
@@ -90,7 +97,7 @@ function ControlWeb () {
     $('#registro').load('./cliente/registro.html', () => {
       $('#btnRegistro').on('click', () => {
         const email = $('#email').val()
-        const pwd = $('#pwd').val()
+        const pwd = $('#password').val()
         if (email && pwd) {
           rest.registrarUsuario(email, pwd)
         }
@@ -106,7 +113,7 @@ function ControlWeb () {
     $('#registro').load('./cliente/login.html', () => {
       $('#btnLogin').on('click', () => {
         const email = $('#email').val()
-        const pwd = $('#pwd').val()
+        const pwd = $('#password').val()
         if (email && pwd) {
           rest.loginUsuario(email, pwd)
         }

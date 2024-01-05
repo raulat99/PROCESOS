@@ -1,3 +1,4 @@
+/* eslint-disable n/no-callback-literal */
 // cad = capa de acceso a datos
 const datos = require('./cad.js')
 const correo = require('./email.js')
@@ -196,6 +197,7 @@ function Sistema (test) {
     const partidas = this.partidas
     // recorrer el array asociativo
 
+    // eslint-disable-next-line array-callback-return
     partidas.map((partida) => {
       if (partida.jugadores.length < partida.maxJug) {
         // meter un JSON en el array con el propietario/creado y el código

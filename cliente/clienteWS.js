@@ -4,7 +4,7 @@ function ClienteWS () {
       {
         auth: {
           serverOffset: 0,
-          username: this.email
+          username: $.cookie('email')
         }
       }
     ).connect()

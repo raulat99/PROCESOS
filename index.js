@@ -16,6 +16,7 @@ const bodyParser = require('body-parser')
 // import dotenv from 'dotenv'
 
 let test = false
+// eslint-disable-next-line no-eval
 test = eval(args[0]) // test=true
 
 const PORT = process.env.PORT || 3000

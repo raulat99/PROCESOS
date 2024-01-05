@@ -5,6 +5,7 @@ function ControlWeb () {
   }
 
   this.mostrarChat = function () {
+    ws.conectar()
     this.limpiarTodoDivs()
     $('#chat').load('./cliente/chat.html', () => {
       $('#form')[0].addEventListener('submit', (e) => {
@@ -46,26 +47,33 @@ function ControlWeb () {
     $('#msg').append(cadena)
   }
 
+  this.mostrarOperacionesConUsuarios = () => {
+    this.limpiarTodoDivs()
+    const email = $.cookie('email')
+    cw.mostrarMsg('Bienvenido al sistema, ' + email)
+    cw.mostrarNumeroUsuarios()
+    cw.mostrarUsuarioActivo()
+    cw.mostrarEliminarUsuario()
+    cw.mostrarObtenerUsuarios()
+  }
+
   this.comprobarSesion = function () {
     const email = $.cookie('email')
     if (email) {
-      cw.mostrarMsg('Bienvenido al sistema, ' + email)
-      cw.mostrarNumeroUsuarios()
-      cw.mostrarUsuarioActivo()
-      cw.mostrarEliminarUsuario()
-      cw.mostrarObtenerUsuarios()
+      this.mostrarChat()
     } else {
       cw.mostrarLogin()
     }
   }
 
   this.limpiarTodoDivs = function () {
-    $('#msg').remove()
-    $('#au').remove()
-    $('#nu').remove()
-    $('#ua').remove()
-    $('#eu').remove()
+    $('#mOU').remove()
+    $('#mNU').remove()
+    $('#mUA').remove()
+    $('#mEU').remove()
     $('#registro').remove()
+    $('#chatID').remove()
+    $('#mMsg').remove()
   }
 
   this.salir = function () {

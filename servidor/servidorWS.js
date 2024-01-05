@@ -1,5 +1,4 @@
 const createClient = require('@libsql/client')
-const dotenv = require('dotenv')
 
 function ServidorWS () {
   this.enviarAlRemitente = function (socket, mensaje, datos) {
@@ -13,8 +12,6 @@ function ServidorWS () {
   }
 
   this.lanzarServidor = async (io, sistema) => {
-    dotenv.config()
-
     const db = createClient.createClient({
       url: 'libsql://just-green-goblin-raulat99.turso.io',
       authToken: await require('./gestorVariables.js').obtenerTokenBBDD()

@@ -12,8 +12,8 @@ async function accessCLAVECORREO () {
   return datos
 }
 
-async function accessTOKENBBDD () {
-  const name = 'projects/277970597970/secrets/TOKEN_BBDD_MENSAJES/versions/1'
+async function accessGMEMAIL () {
+  const name = 'projects/277970597970/secrets/CORREO/versions/1'
   const [version] = await client.accessSecretVersion({
     name
   })
@@ -23,8 +23,30 @@ async function accessTOKENBBDD () {
   return datos
 }
 
-async function accessGMEMAIL () {
-  const name = 'projects/277970597970/secrets/CORREO/versions/1'
+async function accessClientIDGoogle () {
+  const name = 'projects/277970597970/secrets/ClientIDGoogleStrategy/versions/1'
+  const [version] = await client.accessSecretVersion({
+    name
+  })
+  // console.info(`Found secret ${version.name} with state ${version.state}`);
+  const datos = version.payload.data.toString('utf8')
+  // console.log("Datos "+datos);
+  return datos
+}
+
+async function accessClientSecretGoogle () {
+  const name = 'projects/277970597970/secrets/ClientSecretGoogle/versions/1'
+  const [version] = await client.accessSecretVersion({
+    name
+  })
+  // console.info(`Found secret ${version.name} with state ${version.state}`);
+  const datos = version.payload.data.toString('utf8')
+  // console.log("Datos "+datos);
+  return datos
+}
+
+async function accessTOKENBBDD () {
+  const name = 'projects/277970597970/secrets/TOKEN_BBDD_MENSAJES/versions/1'
   const [version] = await client.accessSecretVersion({
     name
   })
@@ -37,6 +59,16 @@ async function accessGMEMAIL () {
 module.exports.obtenerTokenBBDD = async () => {
   const token = await accessTOKENBBDD()
   return token
+}
+
+module.exports.obtenerClientIdGoogle = async () => {
+  const id = await accessClientIDGoogle()
+  return id
+}
+
+module.exports.obtenerClientSecretGoogle = async () => {
+  const secret = await accessClientSecretGoogle()
+  return secret
 }
 
 module.exports.obtenerOptions = async (callback) => {

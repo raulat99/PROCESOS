@@ -23,6 +23,18 @@ async function accessGMEMAIL () {
   return datos
 }
 
+module.exports.obtenerOptions = async (callback) => {
+  const options = { user: '', pass: '' }
+  const user = await accessGMEMAIL()
+  const pass = await accessCLAVECORREO()
+
+  options.user = user
+  options.pass = pass
+
+  // console.log(options)
+  callback(options)
+}
+
 async function accessClientIDGoogle () {
   const name = 'projects/277970597970/secrets/ClientIDGoogleStrategy/versions/1'
   const [version] = await client.accessSecretVersion({
@@ -34,6 +46,11 @@ async function accessClientIDGoogle () {
   return datos
 }
 
+module.exports.obtenerClientIdGoogle = async () => {
+  const id = await accessClientIDGoogle()
+  return id
+}
+
 async function accessClientSecretGoogle () {
   const name = 'projects/277970597970/secrets/ClientSecretGoogle/versions/1'
   const [version] = await client.accessSecretVersion({
@@ -43,6 +60,11 @@ async function accessClientSecretGoogle () {
   const datos = version.payload.data.toString('utf8')
   // console.log("Datos "+datos);
   return datos
+}
+
+module.exports.obtenerClientSecretGoogle = async () => {
+  const secret = await accessClientSecretGoogle()
+  return secret
 }
 
 async function accessTOKENBBDD () {
@@ -59,26 +81,4 @@ async function accessTOKENBBDD () {
 module.exports.obtenerTokenBBDD = async () => {
   const token = await accessTOKENBBDD()
   return token
-}
-
-module.exports.obtenerClientIdGoogle = async () => {
-  const id = await accessClientIDGoogle()
-  return id
-}
-
-module.exports.obtenerClientSecretGoogle = async () => {
-  const secret = await accessClientSecretGoogle()
-  return secret
-}
-
-module.exports.obtenerOptions = async (callback) => {
-  const options = { user: '', pass: '' }
-  const user = await accessGMEMAIL()
-  const pass = await accessCLAVECORREO()
-
-  options.user = user
-  options.pass = pass
-
-  // console.log(options)
-  callback(options)
 }

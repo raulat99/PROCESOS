@@ -176,7 +176,7 @@ function Sistema (test) {
     // obtener el usuario cuyo email es “email”
     const usuario = this.obtenerUsuarioConEmail(email)
     // obtener la partida cuyo código es “codigo”
-    const partida = (this.partidas.filter(partida => partida.codigo == codigo))[0]
+    const partida = (this.partidas.filter(partida => partida.codigo === codigo))[0]
     // si existen el usuario y la partida, entonces
     if (partida && usuario && !this.comprobarJugadorEstaEnPartida(usuario, partida)) {
       // asignar al usuario a la partida
@@ -218,7 +218,7 @@ function Sistema (test) {
   }
 
   this.comprobarJugadorEstaEnPartida = (usuario, partida) => {
-    return !!partida.jugadores.find(jugador => jugador.email == usuario.email)
+    return !!partida.jugadores.find(jugador => jugador.email === usuario.email)
   }
 
   if (!this.test) {
@@ -236,7 +236,7 @@ function Usuario (usr) {
   this.nick = usr.nick
   this.email = usr.email
   this.nombre = usr.nombre
-  this.password
+  this.password = undefined
 }
 
 function Partida (codigo) {

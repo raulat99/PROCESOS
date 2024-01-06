@@ -1,3 +1,4 @@
+const gestorVariables = require('./gestorVariables.js')
 const createClient = require('@libsql/client')
 
 function ServidorWS () {
@@ -14,7 +15,7 @@ function ServidorWS () {
   this.lanzarServidor = async (io, sistema) => {
     const db = createClient.createClient({
       url: 'libsql://just-green-goblin-raulat99.turso.io',
-      authToken: await require('./gestorVariables.js').obtenerTokenBBDD()
+      authToken: await gestorVariables.obtenerTokenBBDD()
     })
 
     await db.execute(`

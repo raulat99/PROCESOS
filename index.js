@@ -56,6 +56,7 @@ passport.use(
   new LocalStrategy({ usernameField: 'email', passwordField: 'password' },
     function (email, password, done) {
       sistema.loginUsuario({ email, password }, function (user) {
+        console.log({ email, password, user })
         // if (user.email != -1) {
         return done(null, user)
         // } else {
@@ -94,7 +95,7 @@ app.post(
   }
 )
 
-/* app.post("/loginUsuario", (request, response) => {
+/* app.post("/loginUsuario", (request, res1ponse) => {
   sistema.loginUsuario(request.body, (res) => {
     response.send({ email: res.email });
   });
@@ -112,7 +113,7 @@ app.get(
 )
 
 app.get('/', function (request, response) {
-  const contenido = fs.readFileSync(__dirname + '/cliente/index.html')
+  const contenido = fs.readFileSync(`${__dirname}/cliente/index.html`)
   response.setHeader('Content-type', 'text/html')
   response.send(contenido)
 })

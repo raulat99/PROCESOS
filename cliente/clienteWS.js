@@ -36,6 +36,8 @@ function ClienteWS () {
       cw.mostrarNuevoMensajeChat(msg, serverOffset, username)
     })
 
+    
+
     this.socket.on('unidoAPartida', (datos) => {
       console.log(datos.codigo)
     })

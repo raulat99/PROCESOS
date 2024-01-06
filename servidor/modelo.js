@@ -100,7 +100,7 @@ function Sistema (test) {
     const modelo = this
     console.log('Buscando usuario ' + ' ' + obj.email)
     this.cad.buscarUsuario({ email: obj.email, confirmada: true }, (usr) => {
-      // console.log("Usuario " + usr.email + " " + usr.password + " " + usr.confirmada)
+      console.log('Usuario ' + usr.email + ' ' + usr.password + ' ' + usr.confirmada)
       if (!usr) {
         console.log(-1)
         callback({ email: -1 })

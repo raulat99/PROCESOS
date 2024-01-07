@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 const fs = require('fs')
 const express = require('express')
 const app = express()
@@ -28,17 +29,11 @@ const haIniciado = function (request, response, next) {
     response.redirect('/')
   }
 }
-
+let sistema = new modelo.Sistema(test)
 const ws = new moduloWS.ServidorWS()
 const io = new Server()
 
 io.listen(httpServer)
-const sistema = new modelo.Sistema(test)
-
-httpServer.listen(PORT, () => {
-  console.log(`App está escuchando en el puerto ${PORT}`)
-  console.log('Ctrl+C para salir')
-})
 
 ws.lanzarServidor(io, sistema)
 
@@ -56,11 +51,7 @@ passport.use(
   new LocalStrategy({ usernameField: 'email', passwordField: 'password' },
     function (email, password, done) {
       sistema.loginUsuario({ email, password }, function (user) {
-        console.log({ email, password, user })
-        // if (user.email != -1) {
         return done(null, user)
-        // } else {
-        // return done(-1);}
       })
     }))
 
@@ -68,6 +59,10 @@ app.use(passport.session())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+httpServer.listen(PORT, () => {
+  console.log(`App está escuchando en el puerto ${PORT}`)
+  console.log('Ctrl+C para salir')
+})
 /// ////////// TODOS LOS APP.POST ///////////////////////////////////////////////
 
 app.post('/registrarUsuario', function (request, response) {
@@ -85,7 +80,28 @@ app.post('/enviarJwt', function (request, response) {
   })
 })
 
-app.post('/loginUsuario', passport.authenticate('local', { failureRedirect: '/fallo', successRedirect: '/ok' }))
+// app.post('/loginUsuario', passport.authenticate('local', { failureRedirect: '/fallo', successRedirect: '/ok' }))
+
+app.post('/loginUsuario', function (request, response, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) {
+      console.log('ERRORR /LOGINUSUARIO')
+      return next(err)
+    }
+    if (!user) {
+      console.log('/FALLO EN /LOGINUSUARIO')
+
+      return response.redirect('/fallo')
+    }
+    request.logIn(user, function (err) {
+      if (err) {
+        return next(err)
+      }
+      console.log('/OK EN /LOGINUSUARIO')
+      return response.redirect('/ok')
+    })
+  })(request, response, next)
+})
 
 app.post(
   '/oneTap/callback',
@@ -104,6 +120,7 @@ app.post(
 /// ////////// TODOS LOS APP.GETS ///////////////////////////////////////////////
 
 app.get('/ok', function (request, response) {
+  console.log('ok')
   response.send({ email: request.user.email })
 })
 
@@ -113,7 +130,12 @@ app.get(
 )
 
 app.get('/', function (request, response) {
-  const contenido = fs.readFileSync(`${__dirname}/cliente/index.html`)
+  let contenido = fs.readFileSync(__dirname + '/cliente/index.html')
+
+  console.log('app.get(/)' + request.user)
+  // TODO: Recuperar cookies del header, y comprobar si existe o no email, token, etc
+  //! si existe entonces => no enviar respuesta
+  //! sino existe => lo que ya esta haciendo:
   response.setHeader('Content-type', 'text/html')
   response.send(contenido)
 })

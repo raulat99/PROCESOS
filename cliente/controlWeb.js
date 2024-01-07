@@ -65,6 +65,7 @@ function ControlWeb () {
   this.comprobarSesion = function () {
     const email = $.cookie('email')
     if (email) {
+      ws.email = email
       $('#inicioSesionNav').remove()
       $('#RegistroSesionNav').remove()
       this.mostrarChat()
@@ -95,7 +96,8 @@ function ControlWeb () {
     }
     $('#fmRegistro').remove()
     $('#registro').load('./cliente/registro.html', () => {
-      $('#btnRegistro').on('click', () => {
+      $('#btnRegistro').on('click', (e) => {
+        e.preventDefault()
         const email = $('#email').val()
         const pwd = $('#password').val()
         if (email && pwd) {
@@ -111,10 +113,13 @@ function ControlWeb () {
     }
     $('#fmLogin').remove()
     $('#registro').load('./cliente/login.html', () => {
-      $('#btnLogin').on('click', () => {
+      $('#btnLogin').on('click', (e) => {
+        e.preventDefault()
         const email = $('#email').val()
         const pwd = $('#password').val()
         if (email && pwd) {
+          console.log('res.loginUsuario(email, pwd)')
+
           rest.loginUsuario(email, pwd)
         }
       })

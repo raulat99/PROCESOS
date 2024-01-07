@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Proyecto</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js" integrity="sha512-zoJXRvW2gC8Z0Xo3lBbao5+AS3g6YWr5ztKqaicua11xHo+AvE1b0lT9ODgrHTmNUxeCw0Ry4BGRYZfXu70weg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./cliente/clienteRest.js"></script>
@@ -20,8 +18,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       function ini() {
-        cw = new ControlWeb();
         rest = new ClienteRest();
+        cw = new ControlWeb();
         ws = new ClienteWS();
         cw.comprobarSesion();
       }
@@ -78,22 +76,22 @@
   
   
   
-    <!-- The Modal -->
+    <!-- The Modal 
     <div class="modal" id="miModal">
       <div class="modal-dialog">
         <div class="modal-content">
   
-          <!-- Modal Header -->
+          <!-- Modal Header 
           <div class="modal-header">
             <h4 class="modal-title">Atención</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
   
-          <!-- Modal body -->
+          <!-- Modal body 
           <div class="modal-body" id="bModal">
           </div>
   
-          <!-- Modal footer -->
+          <!-- Modal footer 
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
           </div>
@@ -101,6 +99,7 @@
         </div>
       </div>
     </div>
+    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 
   </body>

@@ -33,9 +33,10 @@ let sistema = new modelo.Sistema(test)
 const ws = new moduloWS.ServidorWS()
 const io = new Server()
 
-io.listen(httpServer)
-
-ws.lanzarServidor(io, sistema)
+sistema.conectar(() => {
+  io.listen(httpServer)
+  ws.lanzarServidor(io, sistema)
+})
 
 /// ////////// TODOS LOS APP.USE ///////////////////////////////////////////////
 

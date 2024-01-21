@@ -10,18 +10,6 @@ function ClienteWS () {
     ).connect()
     this.lanzarServidorWS()
   }
-  this.crearPartida = () => {
-    this.socket.emit('crearPartida', { email: this.email })
-  }
-
-  this.unirAPartida = (codigo) => {
-    this.socket.emit('unirAPartida',
-      {
-        email: this.email,
-        codigo
-      })
-  }
-
   this.enviarMensajeChat = ({ message }) => {
     this.socket.emit('chatMessage', message)
   }
@@ -48,5 +36,17 @@ function ClienteWS () {
       console.log(lista)
       // cw mostrarListaPartidas
     })
+  }
+
+  this.crearPartida = () => {
+    this.socket.emit('crearPartida', { email: this.email })
+  }
+
+  this.unirAPartida = (codigo) => {
+    this.socket.emit('unirAPartida',
+      {
+        email: this.email,
+        codigo
+      })
   }
 }

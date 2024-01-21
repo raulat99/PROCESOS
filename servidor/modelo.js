@@ -1,6 +1,7 @@
 /* eslint-disable n/no-callback-literal */
 // cad = capa de acceso a datos
 const datos = require('./cad.js')
+const datosMensajes = require('./cadTurso.js')
 const correo = require('./email.js')
 const bcrypt = require('bcrypt')
 
@@ -9,6 +10,20 @@ function Sistema (test) {
   this.partidas = []
   this.test = test
   this.cad = new datos.CAD()
+  this.cadMensajes = new datosMensajes.CadTurso()
+
+  this.crearMensaje = function (obj, callback) {
+    this.cadMensajes.crearMensaje(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  this.recuperarMensajes = function (obj, callback) {
+    this.cadMensajes.recuperarMensajes(obj, (res) => {
+      callback(res)
+    })
+  }
+
   this.agregarUsuario = function (usr) {
     const res = { email: -1 }
 
@@ -221,15 +236,22 @@ function Sistema (test) {
     return !!partida.jugadores.find(jugador => jugador.email === usuario.email)
   }
 
-  if (!this.test) {
-    this.cad.conectar(() => {
-      console.log('Conectado a Mongo Atlas')
-    })
+  this.conectar = function (next) {
+    if (!this.test) {
+      this.cad.conectar(() => {
+        console.log('Conectado a Mongo Atlas')
+      })
 
-    correo.conectar((_res) => {
-      console.log('Variables secretas obtenidas')
-      // console.log(res)
-    })
+      this.cadMensajes.conectar(() => {
+        console.log('Conectado a Turso')
+        next()
+      })
+
+      correo.conectar((_res) => {
+        console.log('Variables secretas obtenidas')
+        // console.log(res)
+      })
+    }
   }
 }
 function Usuario (usr) {

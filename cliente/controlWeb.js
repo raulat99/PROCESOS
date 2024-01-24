@@ -1,5 +1,27 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-undef */
+// eslint-disable-next-line no-unused-vars
 function ControlWeb () {
+  this.crearChat = (nombre) => {
+    console.log({ message: 'ControlWeb.crearChat()', nombre })
+    ws.crearChat({ nombre })
+  }
+
+  this.crearMensaje = (contenido_mensaje, chat_id, fecha_creacion) => {
+    console.log({ message: 'ControlWeb.crearMensaje()', contenido_mensaje, chat_id, fecha_creacion })
+    ws.crearMensaje({ contenido_mensaje, chat_id, fecha_creacion })
+  }
+
+  this.obtenerChatsUsuario = () => {
+    console.log({ message: 'ControlWeb.obtenerChatsUsuario()' })
+    ws.obtenerChatsUsuario()
+  }
+
+  this.obtenerMensajesChatId = (chat_id) => {
+    console.log({ message: 'ControlWeb.obtenerMensajesChatId()', chat_id })
+    ws.obtenerMensajesChatId({ chat_id })
+  }
+
   this.enviarMensajeChat = (value) => {
     ws.socket.emit('chatMessage', value)
   }
@@ -12,7 +34,10 @@ function ControlWeb () {
         e.preventDefault()
         const value = $('#input').val()
         if (value) {
-          this.enviarMensajeChat(value)
+          $.cookie('chat_id', 2)
+          const dateAux = new Date()
+          this.crearMensaje(value, $.cookie('chat_id'), dateAux.toLocaleTimeString())
+          // this.enviarMensajeChat(value)
           input.value = ''
         }
       })

@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer')
 const gv = require('./gestorVariables.js')
 // local
-// const url = 'http://localhost:3000/'
+const url = 'http://localhost:3000/'
 // prod
-const url = 'https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/'
+// onst url = 'https://arquitectura-base-procesos-s5ehr653dq-ew.a.run.app/'
 
 /* gv.accessCLAVECORREO((clave)=>{
     options.pass=clave;

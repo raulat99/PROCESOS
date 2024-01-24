@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const createClient = require('@libsql/client')
 const gestorVariables = require('./gestorVariables.js')
 
@@ -11,28 +12,143 @@ function CadTurso () {
 
     console.log({ event: 'CadTurso Conectado', db: this.db })
 
-    await this.db.execute(`
+    /* await this.db.execute(`
        CREATE TABLE  IF NOT EXISTS messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         content TEXT,
         user TEXT);
-    `)
+    `) */
 
-    callback()
-
-    /* await db.execute(`
+    await this.db.execute(`
       CREATE TABLE IF NOT EXISTS mensajes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         contenido_mensaje TEXT NOT NULL,
+        usuario TEXT NOT NULL, 
         chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE,
         fecha_creacion DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`)
 
+    await this.db.execute(`
       CREATE TABLE IF NOT EXISTS chats (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          usuario1 TEXT NOT NULL,
-          usuario2 TEXT NOT NULL
-      );
-      `) */
+          nombre TEXT NOT NULL
+      );`)
+
+    await this.db.execute(`
+      CREATE TABLE IF NOT EXISTS chatUsuario (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT NOT NULL,
+        chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE
+      );`)
+
+    callback()
+  }
+
+  this.crearChat = function (obj, callback) {
+    const db = this.db
+    const result = crearChat(obj.usuario, obj.nombre, db)
+    result.then(callback)
+  }
+
+  async function crearChat (usuario, nombre, db) {
+    let result, result2
+    let id
+    try {
+      result = await db.execute({
+        sql: 'INSERT INTO chats (nombre) VALUES (:nombre)',
+        args: { nombre }
+      })
+
+      id = result.lastInsertRowid.toString()
+
+      result2 = await db.execute({
+        sql: 'INSERT INTO chatUsuario (usuario, chat_id) VALUES (:usuario, :id)',
+        args: { usuario, id }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+
+    return result.lastInsertRowid.toString()
+  }
+
+  this.crearMensaje = function (obj, callback) {
+    const db = this.db
+    const result = crearMensaje(obj.contenido_mensaje, obj.usuario, obj.chat_id, obj.fecha_creacion, db)
+    result.then(callback)
+  }
+
+  async function crearMensaje (contenido_mensaje, usuario, chat_id, fecha_creacion, db) {
+    let result
+    try {
+      result = await db.execute({
+        sql: 'INSERT INTO mensajes (contenido_mensaje, usuario, chat_id, fecha_creacion) VALUES (:contenido_mensaje, :usuario, :chat_id, :fecha_creacion)',
+        args: { contenido_mensaje, usuario, chat_id, fecha_creacion }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    return result.lastInsertRowid.toString()
+  }
+
+  this.obtenerChatsUsuario = function (obj, callback) {
+    const db = this.db
+    const result = obtenerChatsUsuario(obj.usuario, db)
+    result.then(callback)
+  }
+
+  async function obtenerChatsUsuario (usuario, db) {
+    let result
+    try {
+      result = await db.execute({
+        sql: 'SELECT * FROM chatUsuario WHERE usuario = :usuario',
+        args: { usuario }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    return result.rows
+  }
+
+  this.obtenerMensajesChatId = function (obj, callback) {
+    const db = this.db
+    const result = obtenerMensajesChatId(obj.chat_id, db)
+    result.then(callback)
+  }
+
+  async function obtenerMensajesChatId (chat_id, db) {
+    let result
+
+    try {
+      result = await db.execute({
+        sql: 'SELECT * FROM mensajes WHERE mensajes.chat_id = :chat_id',
+        args: { chat_id }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    return result.rows
+  }
+
+  /* VERSIÓN ANTIGUA
+  this.recuperarMensajes = function (obj, callback) {
+    const db = this.db
+    const result = recuperarMensajes(obj.serverOffset, db)
+    result.then(callback)
+    // callback(result)
+  }
+
+  async function recuperarMensajes (serverOffset, db) {
+    let result
+    try {
+      result = await db.execute({
+        sql: 'SELECT id, content, user FROM messages WHERE id > :serverOffset',
+        args: { serverOffset }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    return result
   }
 
   this.crearMensaje = function (obj, callback) {
@@ -53,45 +169,7 @@ function CadTurso () {
     }
     return result
   }
-
-  this.recuperarMensajes = function (obj, callback) {
-    const db = this.db
-    const result = recuperarMensajes(obj.serverOffset, db)
-    result.then(callback)
-    // callback(result)
-  }
-
-  async function recuperarMensajes (serverOffset, db) {
-    let result
-    try {
-      result = await db.execute({
-        sql: 'SELECT id, content, user FROM messages WHERE id > :serverOffset',
-        args: { serverOffset }
-      })
-    } catch (e) {
-      console.error(e)
-    }
-    return result
-  }
-/*
-  this.crearMensaje = function (obj, callback) {
-    const result = crearMensaje(obj.contenido_mensaje, obj.chat_id, obj.fecha_creacion)
-
-    callback(result)
-  }
-
-   async function crearMensaje (contenido_mensaje, chat_id, fecha_creacion) {
-    let result
-    try {
-      result = await db.execute({
-        sql: 'INSERT INTO mensajes (contenido_mensaje, chat_id, fecha_creacion) VALUES (:contenido_mensaje, :chat_id, :fecha_creacion)',
-        args: { contenido_mensaje, chat_id, fecha_creacion }
-      })
-    } catch (e) {
-      console.error(e)
-    }
-    return result.lastInsertRowid.toString()
-  } */
+  */
 }
 
 module.exports.CadTurso = CadTurso

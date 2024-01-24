@@ -12,6 +12,31 @@ function Sistema (test) {
   this.cad = new datos.CAD()
   this.cadMensajes = new datosMensajes.CadTurso()
 
+  this.crearChat = function (obj, callback) {
+    this.cadMensajes.crearChat(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  this.crearMensaje = function (obj, callback) {
+    this.cadMensajes.crearMensaje(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  this.obtenerChatsUsuario = function (obj, callback) {
+    this.cadMensajes.obtenerChatsUsuario(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  this.obtenerMensajesChatId = function (obj, callback) {
+    this.cadMensajes.obtenerMensajesChatId(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  /* VERSION ANTIGUA
   this.crearMensaje = function (obj, callback) {
     this.cadMensajes.crearMensaje(obj, (res) => {
       callback(res)
@@ -22,7 +47,7 @@ function Sistema (test) {
     this.cadMensajes.recuperarMensajes(obj, (res) => {
       callback(res)
     })
-  }
+  } */
 
   this.agregarUsuario = function (usr) {
     const res = { email: -1 }
@@ -164,6 +189,7 @@ function Sistema (test) {
     )
   }
 
+  /*
   this.obtenerCodigo = () => {
     const codigo = Math.random().toString(30).substring(2)
     console.log('Identificador devuelto: ' + codigo)
@@ -235,6 +261,7 @@ function Sistema (test) {
   this.comprobarJugadorEstaEnPartida = (usuario, partida) => {
     return !!partida.jugadores.find(jugador => jugador.email === usuario.email)
   }
+  */
 
   this.conectar = function (next) {
     if (!this.test) {

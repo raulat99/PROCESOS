@@ -52,6 +52,33 @@ function ServidorWS () {
         console.log('an user has disconnected')
       })
 
+      socket.on('crearChat', async (req) => {
+        sistema.crearChat(req, (res) => {
+          console.log('Ya creado el chat con id: ' + res)
+        })
+      })
+
+      socket.on('crearMensaje', async (req) => {
+        sistema.crearMensaje(req, (res) => {
+          console.log('Ya creado el mensaje con id: ' + res)
+        })
+      })
+
+      socket.on('obtenerChatsUsuario', async (req) => {
+        sistema.obtenerChatsUsuario(req, (res) => {
+          console.log('Estos son los chats obtenidos del usuario ' + req.usuario + ' : ')
+          console.log(res)
+        })
+      })
+
+      socket.on('obtenerMensajesChatId', async (req) => {
+        sistema.obtenerMensajesChatId(req, (res) => {
+          console.log('Estos son los chats obtenidos del chat ' + req.chat_id + ' : ')
+                    console.log(res)
+
+        })
+      })
+
       socket.on('chatMessage', async (msg) => {
         let result
         const username = socket.handshake.auth.username ?? 'anonymous'
@@ -72,7 +99,7 @@ function ServidorWS () {
       })
 
       // recuperar los mensajes anteriores
-      if (!socket.recovered) {
+      /* if (!socket.recovered) {
         /* try {
           const result = await db.execute({
             sql: 'SELECT id, content, user FROM messages WHERE id > ?',
@@ -84,14 +111,13 @@ function ServidorWS () {
           })
         } catch (e) {
           console.error(e)
-        } */
+        }
 
         sistema.recuperarMensajes({ serverOffset: socket.handshake.auth.serverOffset }, (res) => {
           res.rows.forEach(row => {
             socket.emit('chatMessage', row.content, row.id.toString(), row.user)
           })
-        })
-      }
+        }) */
 
       socket.on('crearPartida', (datos) => {
         const codigo = sistema.crearPartida(datos.email)

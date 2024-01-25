@@ -79,16 +79,23 @@ function CadTurso () {
   }
 
   async function crearMensaje (contenido_mensaje, usuario, chat_id, fecha_creacion, db) {
-    let result
+    let resultInsert, result
     try {
-      result = await db.execute({
+      resultInsert = await db.execute({
         sql: 'INSERT INTO mensajes (contenido_mensaje, usuario, chat_id, fecha_creacion) VALUES (:contenido_mensaje, :usuario, :chat_id, :fecha_creacion)',
         args: { contenido_mensaje, usuario, chat_id, fecha_creacion }
+      })
+
+      const idInserted = resultInsert.lastInsertRowid
+
+      result = await db.execute({
+        sql: 'SELECT * FROM mensajes WHERE id = :idInserted',
+        args: { idInserted }
       })
     } catch (e) {
       console.error(e)
     }
-    return result.lastInsertRowid.toString()
+    return result.rows
   }
 
   this.obtenerChatsUsuario = function (obj, callback) {

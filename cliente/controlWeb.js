@@ -29,12 +29,12 @@ function ControlWeb () {
   this.mostrarChat = function () {
     ws.conectar()
     this.limpiarTodoDivs()
+    $.cookie('chat_id', 2)
     $('#chat').load('./cliente/chat.html', () => {
       $('#form')[0].addEventListener('submit', (e) => {
         e.preventDefault()
         const value = $('#input').val()
         if (value) {
-          $.cookie('chat_id', 2)
           const dateAux = new Date()
           this.crearMensaje(value, $.cookie('chat_id'), dateAux.toLocaleTimeString())
           // this.enviarMensajeChat(value)
@@ -43,21 +43,54 @@ function ControlWeb () {
       })
     }
     )
+    this.obtenerMensajesChatId($.cookie('chat_id'))
   }
 
-  this.mostrarNuevoMensajeChat = (msg, serverOffset, username) => {
+  this.mostrarMensajesChat = async (res) => {
+    const todosLosMensajes = res
+    todosLosMensajes.map(async (mensaje) => {
+      this.mostrarNuevoMensajeChat(mensaje)
+    })
+  }
+
+  this.mostrarNuevoMensajeChat = (mensaje) => {
     const messages = document.getElementById('messages')
-    const item = `            
-      <li class="flex justify-end mb-4">
-          <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
-              ${msg}
-          </div>
-          <small>${username} </small>
-      </li>`
-    ws.socket.auth.serverOffset = serverOffset
+    let flexJustify = 'justify-end'
+    let color = 'bg-blue-400'
+    if (mensaje.usuario !== $.cookie('email')) {
+      flexJustify = 'justify-start'
+      color = 'bg-blue-700'
+    }
+    const item = `
+    <li class="flex ${flexJustify} flex col mb-4">
+      <div class="flex flex-col relative mb-4 "> 
+      <div class="mr-2 py-3 px-5 ${color} rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white" style="max-width: 300px; overflow: hidden; word-wrap: break-word;">
+          <p class="px-1 py-1"> ${mensaje.contenido_mensaje} </p>
+          <small class="text-xs px-1 py-1 "> ${mensaje.fecha_creacion} </small>
+        </div>
+        <div class="flex ${flexJustify}">
+          <small><strong>${mensaje.usuario}</strong></small>
+        </div>
+      </div>
+    </li>`
+    // ws.socket.auth.serverOffset = serverOffset
     messages.insertAdjacentHTML('beforeend', item)
     messages.scrollTop = messages.scrollHeight
   }
+
+  // this.mostrarNuevoMensajeChat = (msg, serverOffset, username) => {
+  //  const messages = document.getElementById('messages')
+  //  const item = `
+  //    <li class="flex justify-end mb-4">
+  //        <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+  //            ${msg}
+  //        </div>
+  //        <small>${username} </small>
+  //    </li>`
+  //  ws.socket.auth.serverOffset = serverOffset
+  //  messages.insertAdjacentHTML('beforeend', item)
+  //  messages.scrollTop = messages.scrollHeight
+  // }
 
   this.mostrarMsgId = (msg, id) => {
     $(id).text(msg)

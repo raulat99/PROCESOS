@@ -55,12 +55,14 @@ function ServidorWS () {
       socket.on('crearChat', async (req) => {
         sistema.crearChat(req, (res) => {
           console.log('Ya creado el chat con id: ' + res)
+          this.enviarATodosMenosRemitente(socket, 'crearChat', res)
         })
       })
 
       socket.on('crearMensaje', async (req) => {
         sistema.crearMensaje(req, (res) => {
           console.log('Ya creado el mensaje con id: ' + res)
+          this.enviarATodos(io, 'crearMensaje', res)
         })
       })
 
@@ -68,14 +70,15 @@ function ServidorWS () {
         sistema.obtenerChatsUsuario(req, (res) => {
           console.log('Estos son los chats obtenidos del usuario ' + req.usuario + ' : ')
           console.log(res)
+          this.enviarAlRemitente(socket, 'obtenerChatsUsuario', res)
         })
       })
 
       socket.on('obtenerMensajesChatId', async (req) => {
         sistema.obtenerMensajesChatId(req, (res) => {
           console.log('Estos son los chats obtenidos del chat ' + req.chat_id + ' : ')
-                    console.log(res)
-
+          console.log(res)
+          this.enviarAlRemitente(socket, 'obtenerMensajesChatId', res)
         })
       })
 

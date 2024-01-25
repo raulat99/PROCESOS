@@ -44,6 +44,7 @@ function ClienteWS () {
 
     this.socket.on('crearMensaje', (res) => {
       console.log({ message: 'socket.on crearMensaje', res })
+      cw.mostrarNuevoMensajeChat(res[0])
     })
 
     this.socket.on('obtenerChatsUsuario', (res) => {
@@ -52,11 +53,12 @@ function ClienteWS () {
 
     this.socket.on('obtenerMensajesChatId', (res) => {
       console.log({ message: 'socket.on obtenerMensajesChatId', res })
+      cw.mostrarMensajesChat(res)
     })
 
-    this.socket.on('chatMessage', (msg, serverOffset, username) => {
-      cw.mostrarNuevoMensajeChat(msg, serverOffset, username)
-    })
+    // this.socket.on('chatMessage', (msg, serverOffset, username) => {
+    //  cw.mostrarNuevoMensajeChat(msg, serverOffset, username)
+    // })
 
     this.socket.on('unidoAPartida', (datos) => {
       console.log(datos.codigo)

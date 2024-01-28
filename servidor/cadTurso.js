@@ -31,14 +31,18 @@ function CadTurso () {
     await this.db.execute(`
       CREATE TABLE IF NOT EXISTS chats (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT NOT NULL
+          nombre TEXT NOT NULL,
+          codigo_invitacion TEXT NOT NULL,
+          url_imagen TEXT NOT NULL,
+          unique(nombre)
       );`)
 
     await this.db.execute(`
       CREATE TABLE IF NOT EXISTS chatUsuario (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario TEXT NOT NULL,
-        chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE
+        chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        unique(usuario, chat_id)
       );`)
 
     callback()
@@ -46,17 +50,16 @@ function CadTurso () {
 
   this.crearChat = function (obj, callback) {
     const db = this.db
-    const result = crearChat(obj.usuario, obj.nombre, db)
-    result.then(callback)
+    const result = crearChat(obj.usuario, obj.nombre, obj.codigo_invitacion, obj.url_imagen, db).then(this.obtenerChatsUsuario(obj, callback))
   }
 
-  async function crearChat (usuario, nombre, db) {
+  async function crearChat (usuario, nombre, codigo_invitacion, url_imagen, db) {
     let result, result2
     let id
     try {
       result = await db.execute({
-        sql: 'INSERT INTO chats (nombre) VALUES (:nombre)',
-        args: { nombre }
+        sql: 'INSERT INTO chats (nombre, codigo_invitacion, url_imagen) VALUES (:nombre, :codigo_invitacion, :url_imagen)',
+        args: { nombre, codigo_invitacion, url_imagen }
       })
 
       id = result.lastInsertRowid.toString()
@@ -67,6 +70,7 @@ function CadTurso () {
       })
     } catch (e) {
       console.error(e)
+      return -1
     }
 
     return result.lastInsertRowid.toString()
@@ -94,25 +98,29 @@ function CadTurso () {
       })
     } catch (e) {
       console.error(e)
+      return -1
     }
     return result.rows
   }
 
   this.obtenerChatsUsuario = function (obj, callback) {
     const db = this.db
+
     const result = obtenerChatsUsuario(obj.usuario, db)
     result.then(callback)
   }
 
   async function obtenerChatsUsuario (usuario, db) {
+    await db.sync()
     let result
     try {
       result = await db.execute({
-        sql: 'SELECT * FROM chatUsuario WHERE usuario = :usuario',
+        sql: 'SELECT chats.id, chats.nombre, chats.url_imagen FROM chats, chatUsuario WHERE chats.id = chatUsuario.chat_id AND chatUsuario.usuario = :usuario',
         args: { usuario }
       })
     } catch (e) {
       console.error(e)
+      return -1
     }
     return result.rows
   }
@@ -133,8 +141,34 @@ function CadTurso () {
       })
     } catch (e) {
       console.error(e)
+      return -1
     }
     return result.rows
+  }
+
+  this.unirseChat = function (obj, callback) {
+    const db = this.db
+    const result = unirseChat(obj.nombre, obj.usuario, obj.codigo_invitacion, db).then(this.obtenerChatsUsuario(obj, callback))
+  }
+
+  async function unirseChat (nombre, usuario, codigo_invitacion, db) {
+    let result
+
+    try {
+      result = await db.execute({
+        sql: 'INSERT INTO chatUsuario (usuario, chat_id) VALUES (:usuario, (SELECT id FROM chats WHERE nombre = :nombre AND codigo_invitacion = :codigo_invitacion))',
+        args: { nombre, usuario, codigo_invitacion }
+      })
+    } catch (e) {
+      if (e.message.includes('UNIQUE constraint failed')) {
+        console.error('Error: Ya existe un registro con la misma combinación de usuario y chat_id')
+        return -1
+      } else {
+        console.error('Error al insertar en la base de datos:', e.message)
+        return -1
+      }
+    }
+    return result
   }
 
   /* VERSIÓN ANTIGUA

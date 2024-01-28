@@ -2,13 +2,23 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
 function ControlWeb () {
-  this.crearChat = (nombre) => {
-    console.log({ message: 'ControlWeb.crearChat()', nombre })
-    ws.crearChat({ nombre })
+  this.crearChat = (nombre, codigo_invitacion, url_imagen) => {
+    console.log({
+      message: 'ControlWeb.crearChat()',
+      nombre,
+      codigo_invitacion,
+      url_imagen
+    })
+    ws.crearChat({ nombre, codigo_invitacion, url_imagen })
   }
 
   this.crearMensaje = (contenido_mensaje, chat_id, fecha_creacion) => {
-    console.log({ message: 'ControlWeb.crearMensaje()', contenido_mensaje, chat_id, fecha_creacion })
+    console.log({
+      message: 'ControlWeb.crearMensaje()',
+      contenido_mensaje,
+      chat_id,
+      fecha_creacion
+    })
     ws.crearMensaje({ contenido_mensaje, chat_id, fecha_creacion })
   }
 
@@ -22,6 +32,15 @@ function ControlWeb () {
     ws.obtenerMensajesChatId({ chat_id })
   }
 
+  this.unirseChat = (nombre, codigo_invitacion) => {
+    console.log({
+      message: 'ControlWeb.unirseChat()',
+      nombre,
+      codigo_invitacion
+    })
+    ws.unirseChat({ nombre, codigo_invitacion })
+  }
+
   this.enviarMensajeChat = (value) => {
     ws.socket.emit('chatMessage', value)
   }
@@ -29,25 +48,174 @@ function ControlWeb () {
   this.mostrarChat = function () {
     ws.conectar()
     this.limpiarTodoDivs()
-    $.cookie('chat_id', 2)
+    // $.cookie('chat_id', 3)
+    this.loadChatAndForm()
+    this.obtenerChatsUsuario()
+  }
+
+  this.mostrarFormularioCrearUnirChat = () => {
+    const chatList = document.getElementById('chatList')
+
+    console.log({ message: 'ControlWeb.mostrarFormularioCrearUnirChat()' })
+    if (!document.getElementById('modalCrearOUnirGrupo')) {
+      const item = `
+
+      <div id="modalCrearOUnirGrupo" data-modal-show="true" class="overflow-x-hidden overflow-y-auto fixed h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center flex" aria-modal="true" role="dialog">
+        <div class="relative w-full max-w-2xl px-4 h-full md:h-auto">
+        
+        
+    <div id=""  class="w-full bg-grey-500 z-50 relative align-items:center display:flex justify-content:center m-auto">
+    <div class="container mx-auto py-8">
+        <div class="w-96 mx-auto bg-white rounded shadow"> 
+        <div class="mx-16 py-4 px-8 text-black text-xl font-bold border-b border-grey-500">Información Grupo
+            </div>  
+            <form name="informacion_grupo" id="informacion_grupo">
+                <div class="py-4 px-8">
+                    <div class="mb-4">
+                        <label class="block text-grey-darker text-sm font-bold mb-2">Nombre</label>
+                        <input class=" border rounded w-full py-2 px-3 text-grey-darker" type="text" name="nombre" id="nombre_grupo" value="" placeholder="Introduce el nombre">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-grey-darker text-sm font-bold mb-2">Código invitación</label>
+                        <input class=" border rounded w-full py-2 px-3 text-grey-darker" type="text" name="codigo_invitacion" id="codigo_invitacion" value="" placeholder="Introduce el código">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-grey-darker text-sm font-bold mb-2">Url imagen icono</label>
+                        <input class=" border rounded w-full py-2 px-3 text-grey-darker" type="text" name="url_imagen_icono" id="url_imagen_icono" value="" placeholder="Introduce la url">
+                    </div>
+                    <div class="mb-4 flex flex-col justify-center">
+                      <div class="flex flex row justify-center">
+                        <button id= "crearGrupoButton" type="click" class=" w-1/2 mb-2 mr-1 rounded-full py-1 px-10 bg-gradient-to-r from-green-400 to-blue-500 ">
+                        Crear
+                        </button>
+
+                        <button id= "unirseGrupoButton" type="click" class=" w-1/2 mb-2 ml-1 rounded-full py-1 px-10 bg-gradient-to-r from-green-400 to-blue-500 ">
+                        Unirse
+                        </button>
+                      </div>
+                        <div>
+                        <button id="closeButton" type="click" class=" w-full mb-2 rounded-full py-1 px-5 bg-gradient-to-r from-red-400 to-red-500 ">
+                            Close
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+</div>
+<div modal-backdrop="" class="bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40"></div>
+</div>
+    `
+      chatList.insertAdjacentHTML('afterbegin', item)
+
+      // $('#form')[0].addEventListener('submit', (e) => {
+      //
+      // })
+
+      $('#crearGrupoButton')[0].addEventListener('click', (e) => {
+        e.preventDefault()
+        const valueNombre = $('#nombre_grupo').val()
+        const valueInvitacion = $('#codigo_invitacion').val()
+        let url_imagen_icono = $('#url_imagen_icono').val()
+
+        console.log({ MESSAGE: 'URL DADA', url: url_imagen_icono })
+
+        if (url_imagen_icono === '') {
+          url_imagen_icono = 'https://www.svgrepo.com/show/527959/user-rounded.svg'
+        }
+
+        if (valueNombre && valueInvitacion) {
+          this.crearChat(valueNombre, valueInvitacion, url_imagen_icono)
+        }
+        chatList.firstElementChild.remove()
+      })
+
+      $('#unirseGrupoButton')[0].addEventListener('click', (e) => {
+        e.preventDefault()
+        const valueNombre = $('#nombre_grupo').val()
+        const valueInvitacion = $('#codigo_invitacion').val()
+
+        if (valueNombre && valueInvitacion) {
+          this.unirseChat(valueNombre, valueInvitacion)
+        }
+        chatList.firstElementChild.remove()
+      })
+
+      $('#closeButton')[0].addEventListener('click', (e) => {
+        e.preventDefault()
+        chatList.firstElementChild.remove()
+      })
+    }
+  }
+
+  this.loadChatAndForm = () => {
     $('#chat').load('./cliente/chat.html', () => {
-      $('#form')[0].addEventListener('submit', (e) => {
+      $('#formChat')[0].addEventListener('submit', (e) => {
         e.preventDefault()
         const value = $('#input').val()
         if (value) {
-          const dateAux = new Date()
-          this.crearMensaje(value, $.cookie('chat_id'), dateAux.toLocaleTimeString())
+          const date = new Date()
+          const hours = date.getHours()
+          const minutes = date.getMinutes()
+          const formattedTime = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes
+          this.crearMensaje(
+            value,
+            $.cookie('chat_id'),
+            formattedTime
+          )
           // this.enviarMensajeChat(value)
           input.value = ''
         }
       })
-    }
-    )
-    this.obtenerMensajesChatId($.cookie('chat_id'))
+      $('#createGroup')[0].addEventListener('click', (e) => {
+        e.preventDefault()
+        this.mostrarFormularioCrearUnirChat()
+      })
+    })
+  }
+
+  this.mostrarChatList = (res) => {
+    const todosLosChats = res
+    const chatList = document.getElementById('chatList')
+    chatList.innerHTML = ''
+    todosLosChats.map(async (chat) => {
+      this.mostrarNuevoChat(chat)
+    })
+  }
+
+  this.mostrarNuevoChat = (chat) => {
+    const chatList = document.getElementById('chatList')
+    const chatNombre = chat.nombre
+    const item = `
+    <div style="word-break: break-word;" class="flex flex-row py-4 px-2 justify-center items-center border-b-2 overflow: hidden; overflow-wrap: break-word;">
+    <div class="w-1/4">
+      <img src=${chat.url_imagen} class="object-cover h-12 w-12 rounded-full" alt="">
+    </div>
+    <div class="w-full ">
+    <button id=${chat.id}>
+      <div class="text-lg font-semibold ">${chat.nombre}</div>
+      <!--<span class="text-gray-500">Jelou</span>-->
+      </button>
+    </div>
+    </div>
+    `
+    chatList.insertAdjacentHTML('beforeend', item)
+
+    document.getElementById(chat.id).addEventListener('click', (e) => {
+      e.preventDefault()
+      $.cookie('chat_id', chat.id)
+      this.obtenerMensajesChatId($.cookie('chat_id'))
+    })
   }
 
   this.mostrarMensajesChat = async (res) => {
     const todosLosMensajes = res
+    const messages = document.getElementById('messages')
+    messages.innerHTML = ''
     todosLosMensajes.map(async (mensaje) => {
       this.mostrarNuevoMensajeChat(mensaje)
     })
@@ -57,16 +225,20 @@ function ControlWeb () {
     const messages = document.getElementById('messages')
     let flexJustify = 'justify-end'
     let color = 'bg-blue-400'
+    let rounded = 'rounded-bl-3xl rounded-tl-3xl rounded-tr-xl'
     if (mensaje.usuario !== $.cookie('email')) {
       flexJustify = 'justify-start'
       color = 'bg-blue-700'
+      rounded = 'rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
     }
     const item = `
-    <li class="flex ${flexJustify} flex col mb-4">
+    <li class="flex ${flexJustify} flex col mb-4 ">
       <div class="flex flex-col relative mb-4 "> 
-      <div class="mr-2 py-3 px-5 ${color} rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white" style="max-width: 300px; overflow: hidden; word-wrap: break-word;">
+      <div class="mr-1 py-1 px-3 ${color} ${rounded} text-white" style="max-width: 400px; overflow: hidden; word-wrap: break-word;">
           <p class="px-1 py-1"> ${mensaje.contenido_mensaje} </p>
-          <small class="text-xs px-1 py-1 "> ${mensaje.fecha_creacion} </small>
+          <div class="flex justify-end">
+          <small class="text-xs px-1 py-1 relative bottom-0 right-0 "> ${mensaje.fecha_creacion} </small>
+          </div>
         </div>
         <div class="flex ${flexJustify}">
           <small><strong>${mensaje.usuario}</strong></small>
@@ -200,7 +372,9 @@ function ControlWeb () {
 
     cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> '
     cadena = cadena + '<h5 id="msgOURespuesta">  </h5> '
-    cadena = cadena + '<button id="btnOU" type="submit" class="btn btn-primary">Submit</button>'
+    cadena =
+      cadena +
+      '<button id="btnOU" type="submit" class="btn btn-primary">Submit</button>'
     cadena = cadena + '<style>#btnOU:hover {}</style>'
     cadena = cadena + '</div>'
     cadena = cadena + '</div></div></div>'
@@ -221,7 +395,9 @@ function ControlWeb () {
 
     cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> '
     cadena = cadena + '<h5 id="msgNURespuesta">  </h5> '
-    cadena = cadena + '<button id="btnNU" type="submit" class="btn btn-primary">Submit</button>'
+    cadena =
+      cadena +
+      '<button id="btnNU" type="submit" class="btn btn-primary">Submit</button>'
     cadena = cadena + '<style>#btnNU:hover {}</style>'
     cadena = cadena + '</div>'
     cadena = cadena + '</div></div></div>'
@@ -241,8 +417,12 @@ function ControlWeb () {
     cadena = cadena + '<h4 id="MsgUA"> Mostrar usuario activo </h4>'
     cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> '
     cadena = cadena + '<h5 id="msgUARespuesta">  </h5> '
-    cadena = cadena + '<p><input type="text" class="form-control" id="emailUA" placeholder="introduce un email"></p>'
-    cadena = cadena + '<button id="btnUA" type="submit" class="btn btn-primary">Submit</button>'
+    cadena =
+      cadena +
+      '<p><input type="text" class="form-control" id="emailUA" placeholder="introduce un email"></p>'
+    cadena =
+      cadena +
+      '<button id="btnUA" type="submit" class="btn btn-primary">Submit</button>'
     cadena = cadena + '<style>#btnUA:hover {}</style>'
     cadena = cadena + '</div>'
     cadena = cadena + '</div></div></div>'
@@ -265,8 +445,12 @@ function ControlWeb () {
     cadena = cadena + '<h4 id="MsgEU"> Eliminar usuario </h4>'
     cadena = cadena + '<h5 id="RespuestaTitulo"> Respuesta: </h5> '
     cadena = cadena + '<h5 id="msgEURespuesta">  </h5> '
-    cadena = cadena + '<p><input type="text" class="form-control" id="emailEU" placeholder="introduce un email"></p>'
-    cadena = cadena + '<button id="btnEU" type="submit" class="btn btn-primary">Submit</button>'
+    cadena =
+      cadena +
+      '<p><input type="text" class="form-control" id="emailEU" placeholder="introduce un email"></p>'
+    cadena =
+      cadena +
+      '<button id="btnEU" type="submit" class="btn btn-primary">Submit</button>'
     cadena = cadena + '<style>#btnEU:hover {}</style>'
     cadena = cadena + '</div>'
     cadena = cadena + '</div></div></div>'
@@ -285,7 +469,8 @@ function ControlWeb () {
   this.init = function () {
     const cw = this
     google.accounts.id.initialize({
-      client_id: '277970597970-rls3ih375na1atcscg2ueesj8ufk4ooe.apps.googleusercontent.com', // prod
+      client_id:
+        '277970597970-rls3ih375na1atcscg2ueesj8ufk4ooe.apps.googleusercontent.com', // prod
       auto_select: false,
       callback: cw.handleCredentialsResponse
     })

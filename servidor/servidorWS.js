@@ -54,8 +54,9 @@ function ServidorWS () {
 
       socket.on('crearChat', async (req) => {
         sistema.crearChat(req, (res) => {
-          console.log('Ya creado el chat con id: ' + res)
-          this.enviarATodosMenosRemitente(socket, 'crearChat', res)
+          console.log('Chats creados')
+          console.log(res)
+          this.enviarAlRemitente(socket, 'crearChat', res)
         })
       })
 
@@ -82,8 +83,15 @@ function ServidorWS () {
         })
       })
 
+      socket.on('unirseChat', async (req) => {
+        sistema.unirseChat(req, (res) => {
+          console.log('Se ha unido el usuario ' + req.usuario + ' al chat con nombre : ' + req.nombre)
+          console.log(res)
+          this.enviarAlRemitente(socket, 'unirseChat', res)
+        })
+      })
+
       socket.on('chatMessage', async (msg) => {
-        let result
         const username = socket.handshake.auth.username ?? 'anonymous'
         console.log({ username })
         /* try {

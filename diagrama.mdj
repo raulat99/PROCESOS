@@ -8547,7 +8547,7 @@
 												"$ref": "AAAAAAGNPEbhqothrDA="
 											},
 											"font": "Arial;13;0",
-											"left": 40.72998046875,
+											"left": 24.72998046875,
 											"top": 5,
 											"width": 60.96630859375,
 											"height": 13,
@@ -8560,7 +8560,7 @@
 												"$ref": "AAAAAAGNPEbhqothrDA="
 											},
 											"font": "Arial;13;1",
-											"left": 21,
+											"left": 5,
 											"top": 5,
 											"width": 14.72998046875,
 											"height": 13,
@@ -8568,7 +8568,6 @@
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 16,
 									"width": 1441,
 									"height": 945,
 									"nameLabel": {

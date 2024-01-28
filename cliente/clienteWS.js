@@ -12,9 +12,9 @@ function ClienteWS () {
     this.lanzarServidorWS()
   }
 
-  this.crearChat = ({ nombre }) => {
-    console.log({ message: 'ClienteWS.crearChat()', nombre })
-    this.socket.emit('crearChat', { usuario: this.email, nombre })
+  this.crearChat = ({ nombre, codigo_invitacion, url_imagen }) => {
+    console.log({ message: 'ClienteWS.crearChat()', nombre, codigo_invitacion, url_imagen })
+    this.socket.emit('crearChat', { usuario: this.email, nombre, codigo_invitacion, url_imagen })
   }
 
   this.crearMensaje = ({ contenido_mensaje, chat_id, fecha_creacion }) => {
@@ -32,6 +32,11 @@ function ClienteWS () {
     this.socket.emit('obtenerMensajesChatId', { chat_id })
   }
 
+  this.unirseChat = ({ nombre, codigo_invitacion }) => {
+    console.log({ message: 'ClienteWS.unirseChat()', nombre, codigo_invitacion, usuario: this.email })
+    this.socket.emit('unirseChat', { nombre, codigo_invitacion, usuario: this.email })
+  }
+
   this.lanzarServidorWS = () => {
     const cli = this
     this.socket.on('connection', function () {
@@ -40,6 +45,8 @@ function ClienteWS () {
 
     this.socket.on('crearChat', (res) => {
       console.log({ message: 'socket.on crearChat', res })
+      this.obtenerChatsUsuario()
+      // cw.mostrarChatList(res)
     })
 
     this.socket.on('crearMensaje', (res) => {
@@ -49,6 +56,7 @@ function ClienteWS () {
 
     this.socket.on('obtenerChatsUsuario', (res) => {
       console.log({ message: 'socket.on obtenerChatsUsuario', res })
+      cw.mostrarChatList(res)
     })
 
     this.socket.on('obtenerMensajesChatId', (res) => {

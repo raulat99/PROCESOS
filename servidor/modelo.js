@@ -36,6 +36,12 @@ function Sistema (test) {
     })
   }
 
+  this.unirseChat = function (obj, callback) {
+    this.cadMensajes.unirseChat(obj, (res) => {
+      callback(res)
+    })
+  }
+
   /* VERSION ANTIGUA
   this.crearMensaje = function (obj, callback) {
     this.cadMensajes.crearMensaje(obj, (res) => {

@@ -43,6 +43,12 @@ function ClienteWS () {
       console.log('Usuario conectado al servidor de WebSockets')
     })
 
+    this.socket.on('unirseChat', (res) => {
+      console.log({ message: 'socket.on unirseChat', res })
+      this.obtenerChatsUsuario()
+      // cw.mostrarChatList(res)
+    })
+
     this.socket.on('crearChat', (res) => {
       console.log({ message: 'socket.on crearChat', res })
       this.obtenerChatsUsuario()

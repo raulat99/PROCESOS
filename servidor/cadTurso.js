@@ -50,7 +50,7 @@ function CadTurso () {
 
   this.crearChat = function (obj, callback) {
     const db = this.db
-    const result = crearChat(obj.usuario, obj.nombre, obj.codigo_invitacion, obj.url_imagen, db).then(this.obtenerChatsUsuario(obj, callback))
+    const result = crearChat(obj.usuario, obj.nombre, obj.codigo_invitacion, obj.url_imagen, db)
   }
 
   async function crearChat (usuario, nombre, codigo_invitacion, url_imagen, db) {
@@ -148,12 +148,11 @@ function CadTurso () {
 
   this.unirseChat = function (obj, callback) {
     const db = this.db
-    const result = unirseChat(obj.nombre, obj.usuario, obj.codigo_invitacion, db).then(this.obtenerChatsUsuario(obj, callback))
+    const result = unirseChat(obj.nombre, obj.usuario, obj.codigo_invitacion, db)
   }
 
   async function unirseChat (nombre, usuario, codigo_invitacion, db) {
     let result
-
     try {
       result = await db.execute({
         sql: 'INSERT INTO chatUsuario (usuario, chat_id) VALUES (:usuario, (SELECT id FROM chats WHERE nombre = :nombre AND codigo_invitacion = :codigo_invitacion))',
@@ -169,6 +168,51 @@ function CadTurso () {
       }
     }
     return result
+  }
+
+  this.eliminarChat = function (obj, callback) {
+    const db = this.db
+    const result = eliminarChat(obj.nombre, db)
+    result.then(callback)
+  }
+
+  async function eliminarChat (nombre, db) {
+    let result
+    try {
+      result = await db.execute({
+        sql: 'DELETE FROM chats WHERE chats.nombre = :nombre',
+        args: { nombre }
+      })
+    } catch (e) {
+      console.error(e.message)
+      return -1
+    }
+    return result
+  }
+
+  this.eliminarmeDelChat = function (obj, callback) {
+    const db = this.db
+    console.log('ELIMINARME DEL CHAT')
+    const result = eliminarmeDelChat(obj.nombre, obj.usuario, db)
+
+    result.then(callback)
+  }
+
+  async function eliminarmeDelChat (nombre, usuario, db) {
+    let result
+    try {
+      result = await db.execute({
+        sql: 'DELETE FROM chatUsuario WHERE chatUsuario.usuario = :usuario AND chatUsuario.chat_id = (SELECT id FROM chats WHERE chats.nombre = :nombre)',
+        args: { nombre, usuario }
+      })
+    } catch (e) {
+      console.error(e.message)
+      return -1
+    }
+
+    console.log(result)
+    return nombre
+    // return result.lastInsertRowid.toString()
   }
 
   /* VERSIÓN ANTIGUA

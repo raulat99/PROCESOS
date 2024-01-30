@@ -62,8 +62,9 @@ function ServidorWS () {
 
       socket.on('crearMensaje', async (req) => {
         sistema.crearMensaje(req, (res) => {
-          console.log('Ya creado el mensaje con id: ' + res)
-          this.enviarATodos(io, 'crearMensaje', res)
+          console.log('Ya se ha creado el mensaje con id: ' + res[0].id)
+          console.log(res)
+          this.enviarATodos(io, 'crearMensaje', res[0])
         })
       })
 
@@ -88,6 +89,21 @@ function ServidorWS () {
           console.log('Se ha unido el usuario ' + req.usuario + ' al chat con nombre : ' + req.nombre)
           console.log(res)
           this.enviarAlRemitente(socket, 'unirseChat', res)
+        })
+      })
+
+      socket.on('eliminarChat', async (req) => {
+        sistema.eliminarChat(req, (res) => {
+          console.log('Se ha eliminado el chat con nombre: ' + req.nombre)
+          console.log(res)
+          this.enviarATodos(socket, 'eliminarChat', res)
+        })
+      })
+
+      socket.on('eliminarmeDelChat', async (req) => {
+        sistema.eliminarmeDelChat(req, (res) => {
+          console.log('Se ha eliminado el usuario ' + req.usuario + ' del chat con nombre: ' + req.nombre)
+          this.enviarAlRemitente(socket, 'eliminarmeDelChat', res)
         })
       })
 

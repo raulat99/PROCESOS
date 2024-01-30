@@ -42,6 +42,18 @@ function Sistema (test) {
     })
   }
 
+  this.eliminarChat = function (obj, callback) {
+    this.cadMensajes.eliminarChat(obj, (res) => {
+      callback(res)
+    })
+  }
+
+  this.eliminarmeDelChat = function (obj, callback) {
+    this.cadMensajes.eliminarmeDelChat(obj, (res) => {
+      callback(res)
+    })
+  }
+
   /* VERSION ANTIGUA
   this.crearMensaje = function (obj, callback) {
     this.cadMensajes.crearMensaje(obj, (res) => {
@@ -146,12 +158,13 @@ function Sistema (test) {
     const modelo = this
     console.log('Buscando usuario ' + ' ' + obj.email)
     this.cad.buscarUsuario({ email: obj.email, confirmada: true }, (usr) => {
-      console.log('Usuario ' + usr.email + ' ' + usr.password + ' ' + usr.confirmada)
       if (!usr) {
         console.log(-1)
         callback({ email: -1 })
         return -1
       }
+
+      console.log('Usuario ' + usr.email + ' ' + usr.password + ' ' + usr.confirmada)
 
       if (usr && usr.password) {
         bcrypt.compare(obj.password, usr.password, function (err, result) {

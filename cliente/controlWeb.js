@@ -45,6 +45,16 @@ function ControlWeb () {
     ws.socket.emit('chatMessage', value)
   }
 
+  this.eliminarChat = (nombre) => {
+    console.log({ message: 'ControlWeb.eliminarChat()', nombre })
+    ws.eliminarChat({ nombre })
+  }
+
+  this.eliminarmeDelChat = (nombre) => {
+    console.log({ message: 'ControlWeb.eliminarmeDelChat()', nombre })
+    ws.eliminarmeDelChat({ nombre })
+  }
+
   this.mostrarChat = function () {
     ws.conectar()
     this.limpiarTodoDivs()
@@ -189,7 +199,8 @@ function ControlWeb () {
 
   this.mostrarNuevoChat = (chat) => {
     const chatList = document.getElementById('chatList')
-    const chatNombre = chat.nombre
+    const chatNombreId = chat.nombre.replace(/ /g, '') + chat.id
+
     const item = `
     <div style="word-break: break-word;" class="flex flex-row py-4 px-2 justify-center items-center border-b-2 overflow: hidden; overflow-wrap: break-word;">
     <div class="w-1/4">
@@ -201,6 +212,7 @@ function ControlWeb () {
       <!--<span class="text-gray-500">Jelou</span>-->
       </button>
     </div>
+      <button id=${chatNombreId} class="w-1/4  py-2 px-4 "><svg version="1.1" id="Uploaded to svgrepo.com" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .pictogram_een{fill:#F4D6B0;} .pictogram_drie{fill:#F27261;} .pictogram_vier{fill:#E54D2E;} .st0{fill:#F8AD89;} .st1{fill:#01A59C;} .st2{fill:#0C6667;} .st3{fill:none;} </style> <g> <circle class="pictogram_vier" cx="16" cy="16" r="13"></circle> <path class="pictogram_drie" d="M16,3v26c7.18,0,13-5.82,13-13C29,8.82,23.18,3,16,3z"></path> <path class="pictogram_een" d="M16,3c7.168,0,13,5.832,13,13s-5.832,13-13,13S3,23.168,3,16S8.832,3,16,3 M16,0 C7.163,0,0,7.163,0,16s7.163,16,16,16s16-7.163,16-16S24.837,0,16,0L16,0z M18.121,16l2.475-2.475c0.586-0.585,0.586-1.536,0-2.121 c-0.586-0.586-1.535-0.586-2.121,0L16,13.879l-2.475-2.475c-0.586-0.586-1.535-0.586-2.121,0c-0.586,0.585-0.586,1.536,0,2.121 L13.879,16l-2.475,2.475c-0.586,0.585-0.586,1.536,0,2.121c0.293,0.293,0.677,0.439,1.061,0.439s0.768-0.146,1.061-0.439L16,18.121 l2.475,2.475c0.293,0.293,0.677,0.439,1.061,0.439s0.768-0.146,1.061-0.439c0.586-0.585,0.586-1.536,0-2.121L18.121,16z"></path> </g> </g></svg></button>
     </div>
     `
     chatList.insertAdjacentHTML('beforeend', item)
@@ -209,6 +221,11 @@ function ControlWeb () {
       e.preventDefault()
       $.cookie('chat_id', chat.id)
       this.obtenerMensajesChatId($.cookie('chat_id'))
+    })
+
+    document.getElementById(chatNombreId).addEventListener('click', (e) => {
+      e.preventDefault()
+      this.eliminarmeDelChat(chat.nombre)
     })
   }
 
@@ -250,6 +267,11 @@ function ControlWeb () {
     messages.scrollTop = messages.scrollHeight
   }
 
+  this.vaciarChat = () => {
+    const messages = document.getElementById('messages')
+    messages.innerHTML = ''
+  }
+
   // this.mostrarNuevoMensajeChat = (msg, serverOffset, username) => {
   //  const messages = document.getElementById('messages')
   //  const item = `
@@ -267,13 +289,22 @@ function ControlWeb () {
   this.mostrarMsgId = (msg, id) => {
     $(id).text(msg)
   }
-
+  /*
   this.mostrarMsg = (msg, error) => {
     $('#mMsg').remove()
     let cadena = '<h3 id="mMsg">' + msg + '</h2>'
     if (error) {
       cadena = '<h3 id="mMsg" style="color=red;">' + msg + '</h2>'
     }
+    $('#msg').append(cadena)
+  } */
+
+  this.mostrarMsg = (msg, error) => {
+    $('#mMsg').remove()
+    const claseColor = error ? 'text-red-500' : 'text-black'
+    const cadena = `
+        <h2 id="mMsg" class="text-lg ${claseColor} mb-4 text-center"><strong>${msg}</strong></h3>
+    `
     $('#msg').append(cadena)
   }
 
@@ -363,7 +394,7 @@ function ControlWeb () {
     $('#miModal').modal()
   }
 
-  this.mostrarObtenerUsuarios = () => {
+  /* this.mostrarObtenerUsuarios = () => {
     $('#mOU').remove()
     let cadena = '<div id="mOU">'
     cadena = cadena + '<div class="card"><div class="card-body">'
@@ -379,13 +410,39 @@ function ControlWeb () {
     cadena = cadena + '</div>'
     cadena = cadena + '</div></div></div>'
 
-    $('#nu').append(cadena)
+    $('#ou').append(cadena)
+
+    $('#btnOU').on('click', () => {
+      rest.obtenerUsuarios('#msgOURespuesta')
+    })
+  } */
+
+  this.mostrarObtenerUsuarios = () => {
+    $('#mOU').remove()
+    const cadena = `
+        <div id="mOU">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <h4 id="msgOU" class="text-lg font-bold"> Mostrar usuarios </h4>
+                    <h5 id="RespuestaTitulo" class="text-md font-semibold"> Respuesta: </h5>
+                    <h5 id="msgOURespuesta" class="text-md"> </h5>
+                </div>
+                <div class="mb-6 text-center">
+                    <button id="btnOU" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+
+    $('#ou').append(cadena)
 
     $('#btnOU').on('click', () => {
       rest.obtenerUsuarios('#msgOURespuesta')
     })
   }
-
+  /*
   this.mostrarNumeroUsuarios = () => {
     $('#mNU').remove()
     let cadena = '<div id="mNU">'
@@ -407,8 +464,34 @@ function ControlWeb () {
     $('#btnNU').on('click', () => {
       rest.numeroUsuarios('#msgNURespuesta')
     })
-  }
+  } */
 
+  this.mostrarNumeroUsuarios = () => {
+    $('#mNU').remove()
+    const cadena = `
+        <div id="mNU">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <h4 id="msgNU" class="text-lg font-bold"> Mostrar número de usuarios </h4>
+                    <h5 id="RespuestaTitulo" class="text-md font-semibold"> Respuesta: </h5>
+                    <h5 id="msgNURespuesta" class="text-md"> </h5>
+                </div>
+                <div class="mb-6 text-center">
+                    <button id="btnNU" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+
+    $('#nu').append(cadena)
+
+    $('#btnNU').on('click', () => {
+      rest.numeroUsuarios('#msgNURespuesta')
+    })
+  }
+  /*
   this.mostrarUsuarioActivo = () => {
     $('#mUA').remove()
     let cadena = '<div id="mUA">'
@@ -435,8 +518,40 @@ function ControlWeb () {
         rest.usuarioActivo(email, '#msgUARespuesta')
       }
     })
-  }
+  } */
 
+  this.mostrarUsuarioActivo = () => {
+    $('#mUA').remove()
+    const cadena = `
+        <div id="mUA">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <h4 id="MsgUA" class="text-lg font-bold"> Mostrar usuario activo </h4>
+                    <h5 id="RespuestaTitulo" class="text-md font-semibold"> Respuesta: </h5>
+                    <h5 id="msgUARespuesta" class="text-md"> </h5>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="emailUA" placeholder="Introduce un email" class="w-full bg-gray-200 text-gray-700 border rounded py-2 px-3 focus:outline-none focus:bg-white">
+                </div>
+                <div class="mb-6 text-center">
+                    <button id="btnUA" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+
+    $('#ua').append(cadena)
+
+    $('#btnUA').on('click', () => {
+      const email = $('#emailUA').val()
+      if (email) {
+        rest.usuarioActivo(email, '#msgUARespuesta')
+      }
+    })
+  }
+  /*
   this.mostrarEliminarUsuario = () => {
     $('#mEU').remove()
     let cadena = '<div id="mEU">'
@@ -456,6 +571,38 @@ function ControlWeb () {
     cadena = cadena + '</div></div></div>'
 
     $('#ua').append(cadena)
+
+    $('#btnEU').on('click', () => {
+      const email = $('#emailEU').val()
+      if (email) {
+        rest.eliminarUsuario(email, '#msgEURespuesta')
+      }
+    })
+  } */
+
+  this.mostrarEliminarUsuario = () => {
+    $('#mEU').remove()
+    const cadena = `
+        <div id="mEU">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <h4 id="MsgEU" class="text-lg font-bold"> Eliminar usuario </h4>
+                    <h5 id="RespuestaTitulo" class="text-md font-semibold"> Respuesta: </h5>
+                    <h5 id="msgEURespuesta" class="text-md"> </h5>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="emailEU" placeholder="Introduce un email" class="w-full bg-gray-200 text-gray-700 border rounded py-2 px-3 focus:outline-none focus:bg-white">
+                </div>
+                <div class="mb-6 text-center">
+                    <button id="btnEU" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+
+    $('#eu').append(cadena)
 
     $('#btnEU').on('click', () => {
       const email = $('#emailEU').val()

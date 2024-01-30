@@ -132,11 +132,6 @@ app.get(
 
 app.get('/', function (request, response) {
   let contenido = fs.readFileSync(__dirname + '/cliente/index.html')
-
-  console.log('app.get(/)' + request.user)
-  // TODO: Recuperar cookies del header, y comprobar si existe o no email, token, etc
-  //! si existe entonces => no enviar respuesta
-  //! sino existe => lo que ya esta haciendo:
   response.setHeader('Content-type', 'text/html')
   response.send(contenido)
 })

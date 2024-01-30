@@ -37,6 +37,16 @@ function ClienteWS () {
     this.socket.emit('unirseChat', { nombre, codigo_invitacion, usuario: this.email })
   }
 
+  this.eliminarChat = ({ nombre }) => {
+    console.log({ message: 'ClienteWS.eliminarChat()', nombre })
+    this.socket.emit('eliminarChat', { nombre })
+  }
+
+  this.eliminarmeDelChat = ({ nombre }) => {
+    console.log({ message: 'ClienteWS.eliminarmeDelChat()', nombre, usuario: this.email })
+    this.socket.emit('eliminarmeDelChat', { nombre, usuario: this.email })
+  }
+
   this.lanzarServidorWS = () => {
     const cli = this
     this.socket.on('connection', function () {
@@ -56,8 +66,10 @@ function ClienteWS () {
     })
 
     this.socket.on('crearMensaje', (res) => {
-      console.log({ message: 'socket.on crearMensaje', res })
-      cw.mostrarNuevoMensajeChat(res[0])
+      if ($.cookie('chat_id') == res.chat_id) {
+        console.log({ message: 'socket.on crearMensaje', res })
+        cw.mostrarNuevoMensajeChat(res)
+      }
     })
 
     this.socket.on('obtenerChatsUsuario', (res) => {
@@ -68,6 +80,17 @@ function ClienteWS () {
     this.socket.on('obtenerMensajesChatId', (res) => {
       console.log({ message: 'socket.on obtenerMensajesChatId', res })
       cw.mostrarMensajesChat(res)
+    })
+
+    this.socket.on('eliminarChat', (res) => {
+      console.log({ message: 'socket.on eliminarChat', res })
+      this.obtenerChatsUsuario()
+    })
+
+    this.socket.on('eliminarmeDelChat', (res) => {
+      console.log({ message: 'socket.on eliminarmeDelChat', res })
+      cw.vaciarChat()
+      this.obtenerChatsUsuario()
     })
 
     // this.socket.on('chatMessage', (msg, serverOffset, username) => {

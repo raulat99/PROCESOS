@@ -78,7 +78,7 @@ function ServidorWS () {
 
       socket.on('obtenerMensajesChatId', async (req) => {
         sistema.obtenerMensajesChatId(req, (res) => {
-          console.log('Estos son los chats obtenidos del chat ' + req.chat_id + ' : ')
+          console.log('Estos son los mensajes obtenidos del chat ' + req.chat_id + ' : ')
           console.log(res)
           this.enviarAlRemitente(socket, 'obtenerMensajesChatId', res)
         })

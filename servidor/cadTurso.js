@@ -51,6 +51,7 @@ function CadTurso () {
   this.crearChat = function (obj, callback) {
     const db = this.db
     const result = crearChat(obj.usuario, obj.nombre, obj.codigo_invitacion, obj.url_imagen, db)
+    result.then(callback)
   }
 
   async function crearChat (usuario, nombre, codigo_invitacion, url_imagen, db) {
@@ -149,6 +150,7 @@ function CadTurso () {
   this.unirseChat = function (obj, callback) {
     const db = this.db
     const result = unirseChat(obj.nombre, obj.usuario, obj.codigo_invitacion, db)
+    result.then(callback)
   }
 
   async function unirseChat (nombre, usuario, codigo_invitacion, db) {
